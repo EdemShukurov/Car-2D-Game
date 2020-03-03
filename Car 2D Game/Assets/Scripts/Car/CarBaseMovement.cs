@@ -6,7 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D), typeof(WheelJoint2D))]
 public class CarBaseMovement : MonoBehaviour, IVehicleMovable
 {
-    public const float GRAVITY = 9.81f;  
+    public const float GRAVITY = 9.81f;
+
+    [Header("Wheels Joint")]
+    [SerializeField] private WheelJoint2D _frontWheelJoint;
+    [SerializeField] private WheelJoint2D _backWheelJoint;
 
     [Header("Movement properies")]
     [SerializeField] private float brakeForce = 600f;
@@ -20,6 +24,7 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     [SerializeField] private float _minimumZ = -20F;
     [SerializeField] private float _maximumZ = 20F;
 
+
     private int _screenWidth;
 
     protected Rigidbody2D _rigidBody2D;
@@ -32,21 +37,19 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     private float _angleCar;
 
     private JointMotor2D  _wheelMotor;
-    private WheelJoint2D[] wheelJoints;
 
     private void Start()
     {
         // set screen width
         _screenWidth = Screen.width;
+        _rigidBody2D = GetComponent<Rigidbody2D>();
 
-        wheelJoints = (WheelJoint2D[])_rigidBody2D.GetComponents(typeof(WheelJoint2D));
-
-        if (_rigidBody2D == null || wheelJoints == null)
+        if (_rigidBody2D == null || _frontWheelJoint == null || _backWheelJoint == null)
         {
             throw new ArgumentNullException();
         }
 
-        _wheelMotor = wheelJoints[0].motor;
+        _wheelMotor = _backWheelJoint.motor;
         
     }
 
@@ -142,27 +145,75 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
             Brake();
 
         //set wheels motor speed 
-        foreach (var item in wheelJoints)
-            item.motor = _wheelMotor;
+        _frontWheelJoint.motor = _backWheelJoint.motor = _wheelMotor;
     }
 
     public void Brake()
     {
-        throw new System.NotImplementedException();
+        if (_wheelMotor.motorSpeed > 0f)
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed - brakeForce * Time.deltaTime,
+                0f,
+                maxBackSpeed);
+        }
+
+        if (_wheelMotor.motorSpeed < 0f)
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed + brakeForce * Time.deltaTime,
+                maxSpeed,
+                0f);
+        }
     }
 
     public void DisableMovement()
     {
+        _physicValue = GRAVITY * Mathf.Sin((_angleCar * Mathf.PI) / 180f) * 80f;
 
+        if (_wheelMotor.motorSpeed < 0f || (_wheelMotor.motorSpeed == 0f && _angleCar < 0f))
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed - (deacceleration - _physicValue) * Time.deltaTime,
+                maxSpeed,
+                0f);
+        }
+
+        if (_wheelMotor.motorSpeed > 0f || (_wheelMotor.motorSpeed == 0f && _angleCar > 0f))
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed - (-deacceleration - _physicValue) * Time.deltaTime,
+                0f,
+                maxBackSpeed);
+        }
     }
 
     public void Gas()
     {
-        throw new System.NotImplementedException();
+        _physicValue = GRAVITY * Mathf.Sin((_angleCar * Mathf.PI) / 180f) * 80f;
+
+        _wheelMotor.motorSpeed = Mathf.Clamp(
+            _wheelMotor.motorSpeed - (acceleration + _deltaMovement - _physicValue) * Time.deltaTime,
+            maxSpeed,
+            0);
     }
 
     public void ReverseGear()
     {
-        throw new System.NotImplementedException();
+        //print("ReverseGear");
+        if (_wheelMotor.motorSpeed > 0f)
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed +  brakeForce * Time.deltaTime - _deltaMovement,
+                //backWheelMotor.motorSpeed - brakeForce * Time.deltaTime,
+                0f,
+                maxBackSpeed);
+        }
+
+        if (_wheelMotor.motorSpeed == 0f)
+        {
+            _wheelMotor.motorSpeed = _wheelMotor.motorSpeed + brakeForce / 10f - _deltaMovement;
+        }
+
     }
 }

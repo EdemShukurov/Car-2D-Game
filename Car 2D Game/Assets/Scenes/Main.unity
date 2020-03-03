@@ -1017,7 +1017,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29af29a284f42a642abfbb82c6e041bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidBody2D: {fileID: 0}
+  _frontWheelJoint: {fileID: 1554313229}
+  _backWheelJoint: {fileID: 1554313228}
   brakeForce: 600
   maxSpeed: -1500
   jumpForce: 9
