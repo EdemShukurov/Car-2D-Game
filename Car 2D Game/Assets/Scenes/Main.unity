@@ -380,7 +380,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -675,7 +675,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -838,6 +838,7 @@ GameObject:
   - component: {fileID: 1554313226}
   - component: {fileID: 1554313229}
   - component: {fileID: 1554313228}
+  - component: {fileID: 1554313230}
   m_Layer: 0
   m_Name: Car Base
   m_TagString: Untagged
@@ -1004,6 +1005,27 @@ WheelJoint2D:
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
+--- !u!114 &1554313230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554313223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29af29a284f42a642abfbb82c6e041bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidBody2D: {fileID: 0}
+  brakeForce: 600
+  maxSpeed: -1500
+  jumpForce: 9
+  maxBackSpeed: 600
+  acceleration: 300
+  deacceleration: -100
+  _minimumZ: -20
+  _maximumZ: 20
 --- !u!1 &1737937615
 GameObject:
   m_ObjectHideFlags: 0
