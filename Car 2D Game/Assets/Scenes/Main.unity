@@ -444,10 +444,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846261853}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.0736067, y: -0.53, z: 10}
+  m_LocalPosition: {x: 3.25, y: -0.53, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1899539698}
+  m_Father: {fileID: 1702087565}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &846261855
@@ -529,7 +529,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 846261853}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5f19d454f5abd0b4183569a0c679c024, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -834,8 +834,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1554313225}
   - component: {fileID: 1554313224}
-  - component: {fileID: 1554313227}
   - component: {fileID: 1554313226}
+  - component: {fileID: 1554313227}
   - component: {fileID: 1554313229}
   - component: {fileID: 1554313228}
   - component: {fileID: 1554313230}
@@ -908,7 +908,7 @@ Transform:
   m_Children:
   - {fileID: 1378746917}
   m_Father: {fileID: 1899539698}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &1554313226
 Rigidbody2D:
@@ -940,7 +940,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1554313223}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: ab013c86ad66ee84cae3334b5bb932e3, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -971,11 +971,11 @@ WheelJoint2D:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: -2.9, y: -2.5}
+  m_Anchor: {x: -3.1236076, y: -2.0239398}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_Suspension:
-    m_DampingRatio: 0.7
-    m_Frequency: 2
+    m_DampingRatio: 0.8
+    m_Frequency: 6
     m_Angle: 90
   m_UseMotor: 0
   m_Motor:
@@ -995,11 +995,11 @@ WheelJoint2D:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 2.77, y: -2.5}
+  m_Anchor: {x: 2.9563942, y: -2.0239398}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_Suspension:
-    m_DampingRatio: 0.7
-    m_Frequency: 2
+    m_DampingRatio: 0.8
+    m_Frequency: 6
     m_Angle: 90
   m_UseMotor: 0
   m_Motor:
@@ -1027,6 +1027,38 @@ MonoBehaviour:
   deacceleration: -100
   _minimumZ: -20
   _maximumZ: 20
+--- !u!1 &1702087564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1702087565}
+  m_Layer: 0
+  m_Name: Wheels
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1702087565
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1702087564}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1737937616}
+  - {fileID: 846261854}
+  m_Father: {fileID: 1899539698}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1737937615
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,10 +1086,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1737937615}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.6063936, y: -0.53, z: 10}
+  m_LocalPosition: {x: -2.8300018, y: -0.53, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1899539698}
+  m_Father: {fileID: 1702087565}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1737937617
@@ -1139,7 +1171,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 1737937615}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5f19d454f5abd0b4183569a0c679c024, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -1230,9 +1262,8 @@ Transform:
   m_LocalPosition: {x: 50, y: 2, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1737937616}
-  - {fileID: 846261854}
   - {fileID: 1554313225}
+  - {fileID: 1702087565}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

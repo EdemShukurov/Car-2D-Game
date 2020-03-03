@@ -12,6 +12,7 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     [SerializeField] private WheelJoint2D _frontWheelJoint;
     [SerializeField] private WheelJoint2D _backWheelJoint;
 
+
     [Header("Movement properies")]
     [SerializeField] private float brakeForce = 600f;
     [SerializeField] private float maxSpeed = -1500f;
@@ -23,6 +24,10 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     [Header("Limit angle")]
     [SerializeField] private float _minimumZ = -20F;
     [SerializeField] private float _maximumZ = 20F;
+
+
+    private WheelsCollision _frontWheelCollision;
+    private WheelsCollision _backWheelCollision;
 
 
     private int _screenWidth;
@@ -50,7 +55,12 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
         }
 
         _wheelMotor = _backWheelJoint.motor;
-        
+
+        //set script WheelsCollision
+        _frontWheelCollision = _frontWheelJoint.connectedBody.GetComponent<WheelsCollision>();
+        _backWheelCollision = _backWheelJoint.connectedBody.GetComponent<WheelsCollision>();
+
+
     }
 
     private void Update()
@@ -73,8 +83,11 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// </summary>
     private void LimitAngleCar()
     {
-        _angleCar = ClampAngle(transform.eulerAngles.z, _minimumZ, _maximumZ);
-        transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, _angleCar);
+        if (_frontWheelCollision.isGrounded == false || _backWheelCollision.isGrounded == false)
+        { 
+            _angleCar = ClampAngle(transform.eulerAngles.z, _minimumZ, _maximumZ);
+            transform.rotation = Quaternion.Euler(transform.localEulerAngles.x, transform.localEulerAngles.y, _angleCar);
+        }
     }
 
     /// <summary>
@@ -200,19 +213,17 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
 
     public void ReverseGear()
     {
-        //print("ReverseGear");
         if (_wheelMotor.motorSpeed > 0f)
         {
             _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed +  brakeForce * Time.deltaTime - _deltaMovement,
-                //backWheelMotor.motorSpeed - brakeForce * Time.deltaTime,
+                _wheelMotor.motorSpeed +  brakeForce * Time.deltaTime, //- _deltaMovement,
                 0f,
                 maxBackSpeed);
         }
 
         if (_wheelMotor.motorSpeed == 0f)
         {
-            _wheelMotor.motorSpeed = _wheelMotor.motorSpeed + brakeForce / 10f - _deltaMovement;
+            _wheelMotor.motorSpeed = _wheelMotor.motorSpeed + brakeForce / 10f; //- _deltaMovement;
         }
 
     }
