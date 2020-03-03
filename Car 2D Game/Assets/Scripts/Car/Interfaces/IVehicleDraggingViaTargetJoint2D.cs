@@ -1,14 +1,8 @@
 ﻿internal interface IVehicleDraggingViaTargetJoint2D
 {
-    void BeginDragging();
+    void BeginVehicleDragging();
 
-    void EndDragging();
-
-    void EnableTargetJoint2D();
-
-    void DisableTargetJoint2D();
-
-    void AddAnchorToTargetJoint2D();
+    void EndVehicleDragging();
 
     void AddTargetToTargetJoint2D();
 }

@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Drag a Rigidbody2D by selecting one of its colliders by pressing the mouse down.
+/// Drag a Rigidbody2D by selecting one of its colliders by pressing the mouse/touch down.
 /// When the collider is selected, add a TargetJoint2D.
-/// While the mouse is moving, continually set the target to the mouse position.
-/// When the mouse is released, the TargetJoint2D is deleted.`
+/// While the mouse/finger is moving, continually set the target to the mouse/finger position.
+/// When the mouse/touch is released, the TargetJoint2D is deleted.`
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
@@ -17,19 +17,19 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     [Range(0.0f, 100.0f)]
     [SerializeField] private float _frequency = 5.0f;
 
-    [Range(0.0f, 1000.0f)]
-    [SerializeField] private float _maxForce = 25.0f;
-
-
-    [SerializeField] private static float speedChangeAngle = 0.6f;
+    [Range(0.0f, 5000.0f)]
+    [SerializeField] private float _maxForce = 1000.0f;
 
     private Vector2 _currentWorldPosition;
-    private bool _useDrag;
 
     private Rigidbody2D _rigidbody;
     private TargetJoint2D _targetJoint2D;
 
     private static IPivotRotation _pivotRotation;
+
+    private float _originalCarMass;
+
+    private bool _useDrag;
 
     private void OnEnable()
     {
@@ -42,25 +42,11 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     private void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-
-        AddTargetJoint2D();
-        DisableTargetJoint2D();
-
-
         _pivotRotation = GetComponent<CarRotation>();
+
+        _originalCarMass = _rigidbody.mass;
     }
 
-    /// <summary>
-    /// Add TargetJoint2D to Car
-    /// </summary>
-    private void AddTargetJoint2D()
-    {
-        // Add a target joint to the Rigidbody2D GameObject.
-        _targetJoint2D = _rigidbody.gameObject.AddComponent<TargetJoint2D>();
-        _targetJoint2D.dampingRatio = _damping;
-        _targetJoint2D.frequency = _frequency;
-        _targetJoint2D.maxForce = _maxForce;
-    }
 
     #region OnTouchDown and OnMouseDown
 
@@ -79,7 +65,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
             return;
         }
 
-        BeginDragging();
+        BeginVehicleDragging();
     }
 
     private void OnMouseDown()
@@ -87,50 +73,76 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         // get world mouse click position
         _currentWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        BeginDragging();
+        BeginVehicleDragging();
     }
 
     #endregion
 
-    public void BeginDragging()
+    public void BeginVehicleDragging()
     {
         _pivotRotation.AlignAngleCarViaPivot();
 
         // set flag
         _useDrag = true;
 
-        AddAnchorToTargetJoint2D();
-
-        EnableTargetJoint2D();
+        AddTargetJoint2D();
+        ChangeRigidBody2DProperties();
     }
 
-
-    public void AddAnchorToTargetJoint2D()
+    /// <summary>
+    /// Cancel the car rotation and decrease it's mass in order to the car will become easier
+    /// </summary>
+    private void ChangeRigidBody2DProperties()
     {
-        // Attach the anchor to the local-point where we clicked.
+        _rigidbody.freezeRotation = true;
+        _rigidbody.mass = 10f;        
+    }
+
+    /// <summary>
+    /// Add TargetJoint2D to Car
+    /// </summary>
+    private void AddTargetJoint2D()
+    {
+        if(_targetJoint2D)
+        {
+            // Add a target joint to the Rigidbody2D GameObject.
+            _targetJoint2D = _rigidbody.gameObject.AddComponent<TargetJoint2D>();
+            _targetJoint2D.dampingRatio = _damping;
+            _targetJoint2D.frequency = _frequency;
+            _targetJoint2D.maxForce = _maxForce;
+
+            AddAnchorToTargetJoint2D();
+        }
+
+    }
+
+    /// <summary>
+    /// Attach the anchor to the local-point where we clicked
+    /// </summary>
+    private void AddAnchorToTargetJoint2D()
+    {
         _targetJoint2D.anchor = _targetJoint2D.transform.InverseTransformPoint(_currentWorldPosition);
     }
 
-
-    public void EnableTargetJoint2D()
-    {
-        _targetJoint2D.enabled = true;
-    }
 
     protected override void Update()
     {
         if (_useDrag == true)
         {
+            if (Input.GetMouseButtonUp(0))
+            {
+                EndVehicleDragging();
+                return;
+            }
+
             GetTouchPosition();
             AddTargetToTargetJoint2D();
         }
-        else if (Input.GetMouseButtonUp(0) && _useDrag)
-        {
-            EndDragging();
-        }
+        // car base movement
         else
-            // car base movement
             base.Update();
+
+
     }
 
     /// <summary>
@@ -146,32 +158,43 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     public void AddTargetToTargetJoint2D()
     {
-        _targetJoint2D.target = _currentWorldPosition;
+        if(_targetJoint2D)
+            _targetJoint2D.target = _currentWorldPosition;
     }
-
-    //private void OnTouchStationaryOrMoved(Touch eventData)
-    //{
-    //    if(_useDrag == true)
-    //        _currentWorldPosition = Camera.main.ScreenToWorldPoint(eventData.position);
-    //}
 
     private void OnTouchUp(Touch eventData)
     {
         if (_useDrag == true)
-            EndDragging();
+            EndVehicleDragging();
     }
 
-    public void EndDragging()
+    public void EndVehicleDragging()
     {
         //set flag
         _useDrag = false;
 
-        DisableTargetJoint2D();
+        DestroyTargetJoint2D();
+        RefreshRigidBody2DProperties();
+        _pivotRotation.DetachPivot();
     }
 
-    public void DisableTargetJoint2D()
+    /// <summary>
+    /// Return car properties
+    /// </summary>
+    private void RefreshRigidBody2DProperties()
     {
-        _targetJoint2D.enabled = false;
+        _rigidbody.freezeRotation = false;
+        _rigidbody.mass = _originalCarMass;
+    }
+
+
+    /// <summary>
+    /// Remove TargetJoint2D
+    /// </summary>
+    private void DestroyTargetJoint2D()
+    {
+        Destroy(_targetJoint2D);
+        _targetJoint2D = null;
     }
 
     private void OnDisable()

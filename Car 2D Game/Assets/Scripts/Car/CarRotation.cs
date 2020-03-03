@@ -25,18 +25,22 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleCarRotation
         if (transform.eulerAngles.z == 0f)
             return;
 
+        Quaternion targetAngle;
+
         if (transform.eulerAngles.z > 0f)
         {
             SetPivot(_backWheelCollision.transform.position);
-            StartCoroutine(RotatePivot((Quaternion.Euler(0f, 0f, -transform.eulerAngles.z)), _speedChangeAngle));
+            targetAngle = Quaternion.Euler(0f, 0f, -transform.eulerAngles.z);
+            StartCoroutine(RotatePivot(targetAngle, _speedChangeAngle));
         }
         else
         {
             SetPivot(_frontWheelCollision.transform.position);
-            StartCoroutine(RotatePivot((Quaternion.Euler(0f, 0f, transform.eulerAngles.z)), _speedChangeAngle));
+            targetAngle = Quaternion.Euler(0f, 0f, transform.eulerAngles.z);
+            StartCoroutine(RotatePivot(targetAngle, _speedChangeAngle));
         }
 
-        DetachPivot();
+        //DetachPivot();
     }
 
     /// <summary>
@@ -46,13 +50,13 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleCarRotation
     private void SetPivot(Vector3 wheelPosition)
     {
         pivot.transform.position = wheelPosition;
-        transform.parent.parent = pivot.transform;
+        transform.parent = pivot.transform;
     }
 
     /// <summary>
     /// Set off parent object
     /// </summary>
-    private void DetachPivot()
+    public void DetachPivot()
     {
         // refresh pivot (parent object) 
         transform.parent = null;
@@ -107,6 +111,7 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleCarRotation
 
         return Mathf.Clamp(angle, min, max);
     }
+
 
     private Quaternion RotateAngleCar(float angle)
     {
