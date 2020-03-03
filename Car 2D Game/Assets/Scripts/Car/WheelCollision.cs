@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class WheelsCollision : MonoBehaviour
+public class WheelCollision : MonoBehaviour
 {
     public bool isGrounded = false;
 
