@@ -1,19 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Cloud : MonoBehaviour, IPooledObject
 {
-    public float upSide = 30f;
-    public float downSide = 0f;
+    private float _upSide;
+    private float _downSide;
 
-    //public GameObject cloudSpawner;
+    private float _speed;
+
+    private float _xPosition;
+
+    private CloudSpawner _cloudSpawner;
+
+    private void Start()
+    {
+        _cloudSpawner = CloudSpawner.Instance;
+        _xPosition = _cloudSpawner.transform.position.x;
+
+        var boxCollider = _cloudSpawner.GetComponent<BoxCollider2D>();
+        if (boxCollider != null)
+        {
+            _upSide = boxCollider.size.x;
+            _downSide = boxCollider.size.y;
+        }
+    }
 
     public void OnObjectSpawned()
     {
-        float yPosition = Random.Range(downSide, upSide);
+        float yPosition = Random.Range(_downSide, _upSide);
+        transform.position = new Vector2(_xPosition, yPosition);
 
-        Vector2 force = new Vector2(0f, yPosition);
+        _speed = Random.Range(3f, 5f);
+    }
 
-        GetComponent<Rigidbody2D>().velocity = force;
+    private void Update()
+    {
+        transform.Translate(Vector3.left * _speed * Time.smoothDeltaTime, Space.World);
     }
 }

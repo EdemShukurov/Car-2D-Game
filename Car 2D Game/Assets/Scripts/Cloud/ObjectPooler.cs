@@ -4,12 +4,19 @@ using System;
 
 public class ObjectPooler : MonoBehaviour
 {
+    //[Serializable]
+    //public class Pool
+    //{
+    //    public string tag;
+    //    public GameObject prefab;
+    //    public int size;
+    //}
+
     [Serializable]
     public class Pool
     {
         public string tag;
-        public GameObject prefab;
-        public int size;
+        public List<GameObject> prefabs;
     }
 
     public List<Pool> pools;
@@ -26,6 +33,25 @@ public class ObjectPooler : MonoBehaviour
 
     #endregion
 
+    //private void Start()
+    //{
+    //    poolDictionary = new Dictionary<string, Queue<GameObject>>();
+
+    //    foreach (Pool pool in pools)
+    //    {
+    //        var objectPool = new Queue<GameObject>();
+
+    //        for (int i = 0; i < pool.size; i++)
+    //        {
+    //            var obj = Instantiate(pool.prefab);
+    //            obj.SetActive(false);
+    //            objectPool.Enqueue(obj);
+    //        }
+
+    //        poolDictionary.Add(pool.tag, objectPool);
+    //    }
+    //}
+
     private void Start()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
@@ -34,9 +60,9 @@ public class ObjectPooler : MonoBehaviour
         {
             var objectPool = new Queue<GameObject>();
 
-            for (int i = 0; i < pool.size; i++)
+            for (int i = 0; i < pool.prefabs.Count; i++)
             {
-                var obj = Instantiate(pool.prefab);
+                var obj = Instantiate(pool.prefabs[i]);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
@@ -44,6 +70,8 @@ public class ObjectPooler : MonoBehaviour
             poolDictionary.Add(pool.tag, objectPool);
         }
     }
+
+
 
     public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation)
     {
@@ -53,7 +81,7 @@ public class ObjectPooler : MonoBehaviour
             return null;
         }
 
-        if (poolDictionary[tag].Count < 0)
+        if (poolDictionary[tag].Count == 0)
         {
             Debug.LogWarning("Queue is epmty, tag: " + tag);
             return null;
@@ -73,8 +101,19 @@ public class ObjectPooler : MonoBehaviour
             pooledObject.OnObjectSpawned();
         }
 
-        poolDictionary[tag].Enqueue(objectToSpawn);
+        //poolDictionary[tag].Enqueue(objectToSpawn);
 
         return objectToSpawn;
+    }
+
+    public void EnqueeObject(string tag, GameObject objectToPull)
+    {
+        if (poolDictionary.ContainsKey(tag) == false)
+        {
+            Debug.LogWarning("Pool with tag " + tag + " doesnt exist");
+            return;
+        }
+
+        poolDictionary[tag].Enqueue(objectToPull);
     }
 }
