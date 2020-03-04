@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CloudDestroyer : MonoBehaviour
+public class CloudRefesher : MonoBehaviour
 {
     public const string TAG = "Cloud";
 
