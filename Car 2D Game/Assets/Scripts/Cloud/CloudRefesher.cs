@@ -1,11 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CloudRefesher : MonoBehaviour
 {
     public const string TAG = "Cloud";
 
     private ObjectPooler _objectPooler;
+
+
+    #region Singleton
+
+    public static CloudRefesher Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    #endregion
 
     private void Start()
     {
@@ -14,7 +25,7 @@ public class CloudRefesher : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == TAG)
+        if(collision.CompareTag(TAG))
         {
             collision.gameObject.SetActive(false);
 

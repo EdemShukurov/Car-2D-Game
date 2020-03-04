@@ -62,11 +62,9 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
             _deltaMovement = Input.mousePosition.x;
             GetTouch(_deltaMovement);
 
-            UpdateVelocity();
-
             SetWheelsMotorSpeed();
         }
-
+        UpdateVelocity();
 
     }
  
@@ -79,14 +77,14 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     {
         if (touchPos > _centerScreenX)
         {
-            _movementInput = touchPos - _centerScreenX;
+            _movementInput = 1f;
         }
         if (touchPos < _centerScreenX)
         {
-            _movementInput = _centerScreenX - touchPos;
+            _movementInput = -1f;
         }
 
-        print("touchPos " + touchPos + "_movementInput   " + _movementInput);
+       // print("touchPos " + touchPos + "_movementInput   " + _movementInput);
     }
 
     /// <summary>
@@ -94,28 +92,24 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// </summary>
     private void UpdateVelocity()
     {
+        //_wheelMotor.motorSpeed = 10f * _movementInput;
+
         //determine action
-        //switch (_movementInput)
-        //{
-        //    case -1f:
-        //        if (_wheelMotor.motorSpeed >= 0)
-        //            ReverseGear();
-        //        else
-        //            Brake();
-        //        break;
+        switch (_movementInput)
+        {
+            case -1f:
+                ReverseGear();
+                break;
 
-        //    case 0f:
-        //        DisableMovement();
-        //        break;
+            case 0f:
+                DisableMovement();
+                break;
 
-        //    case 1f:
-        //        if (_wheelMotor.motorSpeed <= 0)
-        //            Gas();
-        //        else
-        //            Brake();
-        //        break;
-        //}
-        SetVelocity();
+            case 1f:
+                Gas();
+                break;
+        }
+        //SetVelocity();
 
         if (Input.GetKey(KeyCode.Space))
             Brake();
@@ -134,7 +128,7 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// </summary>
     private void SetVelocity()
     {
-        _physicValue = GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
+        _physicValue = GetPhysicInfluenceValue();
 
         //_wheelMotor.motorSpeed = Mathf.Clamp(
         //    _wheelMotor.motorSpeed - (acceleration * _movementInput * _physicValue) * Time.deltaTime,
@@ -147,28 +141,10 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
             7000f);
     }
 
-    public void Brake()
-    {
-        if (_wheelMotor.motorSpeed > 0f)
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed - brakeForce * Time.deltaTime,
-                0f,
-                maxBackSpeed);
-        }
-
-        if (_wheelMotor.motorSpeed < 0f)
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed + brakeForce * Time.deltaTime,
-                maxSpeed,
-                0f);
-        }
-    }
-
     public void DisableMovement()
     {
-        _physicValue = GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
+        Debug.LogWarning("DisableMovement");
+        _physicValue = GetPhysicInfluenceValue();
 
         if (_wheelMotor.motorSpeed < 0f || (_wheelMotor.motorSpeed == 0f && transform.eulerAngles.z < 0f))
         {
@@ -187,18 +163,10 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
         }
     }
 
-    public void Gas()
-    {
-        _physicValue = GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
-
-        _wheelMotor.motorSpeed = Mathf.Clamp(
-            _wheelMotor.motorSpeed - (acceleration + _deltaMovement - _physicValue) * Time.deltaTime,
-            maxSpeed,
-            0);
-    }
 
     public void ReverseGear()
     {
+        Debug.LogWarning("ReverseGear");
         if (_wheelMotor.motorSpeed > 0f)
         {
             _wheelMotor.motorSpeed = Mathf.Clamp(
@@ -211,5 +179,43 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
         {
             _wheelMotor.motorSpeed = _wheelMotor.motorSpeed + brakeForce / 10f; //- _deltaMovement;
         }
+    }
+
+
+    public void Brake()
+    {
+        Debug.LogWarning("Brake");
+        if (_wheelMotor.motorSpeed > 0f)
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed - brakeForce * Time.deltaTime,
+                0f,
+                maxBackSpeed);
+        }
+
+        if (_wheelMotor.motorSpeed < 0f)
+        {
+            _wheelMotor.motorSpeed = Mathf.Clamp(
+                _wheelMotor.motorSpeed + brakeForce * Time.deltaTime,
+                maxSpeed,
+                0f);
+        }
+    }
+
+    public void Gas()
+    {
+        Debug.LogWarning("Gas");
+
+        _physicValue = GetPhysicInfluenceValue();
+
+        _wheelMotor.motorSpeed = Mathf.Clamp(
+            _wheelMotor.motorSpeed - (acceleration + _deltaMovement - _physicValue) * Time.deltaTime,
+            maxSpeed,
+            0);
+    }
+
+    private float GetPhysicInfluenceValue()
+    {
+        return GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
     }
 }

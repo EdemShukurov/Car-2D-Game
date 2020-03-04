@@ -11,9 +11,11 @@ public class Cloud : MonoBehaviour, IPooledObject
 
     private CloudSpawner _cloudSpawner;
 
+
     private void Start()
     {
         _cloudSpawner = CloudSpawner.Instance;
+
         _xPosition = _cloudSpawner.transform.position.x;
 
         var boxCollider = _cloudSpawner.GetComponent<BoxCollider2D>();
