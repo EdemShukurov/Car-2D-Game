@@ -1,0 +1,4 @@
+﻿interface IPooledObject
+{
+    void OnObjectSpawned();
+}

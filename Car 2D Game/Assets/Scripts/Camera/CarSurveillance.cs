@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraSurveillance : MonoBehaviour
+public class CarSurveillance : MonoBehaviour
 {
     public Transform target;
 

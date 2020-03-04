@@ -13,15 +13,14 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
 
     [Header("Movement properies")]
  
-    [SerializeField] private float brakeForce = 600f;
-    [SerializeField] private float maxSpeed = -1500f;
+    [SerializeField] private float brakeForce = 800f;
+    [SerializeField] private float maxSpeed = -3500f;
     [SerializeField] private float jumpForce = 9f;
-    [SerializeField] private float maxBackSpeed = 600f;
-    [SerializeField] private float acceleration = 300f;
-    [SerializeField] private float deacceleration = -100f;
+    [SerializeField] private float maxBackSpeed = 1000f;
+    [SerializeField] private float acceleration = 500f;
+    [SerializeField] private float deacceleration = -300f;
 
-
-    private int _screenWidth;
+    private int _centerScreenX;
 
     protected Rigidbody2D _rigidBody2D;
 
@@ -36,8 +35,9 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
 
     private void Start()
     {
-        // set screen width
-        _screenWidth = Screen.width;
+        // set center screen width
+        _centerScreenX = Screen.width / 2;
+
         _rigidBody2D = GetComponent<Rigidbody2D>();
 
         if (_rigidBody2D == null || _frontWheelJoint == null || _backWheelJoint == null)
@@ -53,15 +53,21 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     {
         _carRotation.LimitAngleCar();
 
-        _movementInput = Input.GetAxisRaw("Horizontal");
+       // _movementInput = Input.GetAxis("Horizontal");
+
+
 
         if (Input.GetMouseButton(0))
         {
             _deltaMovement = Input.mousePosition.x;
             GetTouch(_deltaMovement);
+
+            UpdateVelocity();
+
+            SetWheelsMotorSpeed();
         }
 
-        UpdateVelocity();
+
     }
  
 
@@ -71,14 +77,16 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// <param name="touchPos">touch/mouseclick position</param>
     protected void GetTouch(float touchPos)
     {
-        if (touchPos > _screenWidth / 2f)
+        if (touchPos > _centerScreenX)
         {
-            _movementInput = 1.0f;
+            _movementInput = touchPos - _centerScreenX;
         }
-        if (touchPos < _screenWidth / 2f)
+        if (touchPos < _centerScreenX)
         {
-            _movementInput = -1.0f;
+            _movementInput = _centerScreenX - touchPos;
         }
+
+        print("touchPos " + touchPos + "_movementInput   " + _movementInput);
     }
 
     /// <summary>
@@ -87,32 +95,56 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     private void UpdateVelocity()
     {
         //determine action
-        switch (_movementInput)
-        {
-            case -1f:
-                if (_wheelMotor.motorSpeed >= 0)
-                    ReverseGear();
-                else
-                    Brake();
-                break;
+        //switch (_movementInput)
+        //{
+        //    case -1f:
+        //        if (_wheelMotor.motorSpeed >= 0)
+        //            ReverseGear();
+        //        else
+        //            Brake();
+        //        break;
 
-            case 0f:
-                DisableMovement();
-                break;
+        //    case 0f:
+        //        DisableMovement();
+        //        break;
 
-            case 1f:
-                if (_wheelMotor.motorSpeed <= 0)
-                    Gas();
-                else
-                    Brake();
-                break;
-        }
+        //    case 1f:
+        //        if (_wheelMotor.motorSpeed <= 0)
+        //            Gas();
+        //        else
+        //            Brake();
+        //        break;
+        //}
+        SetVelocity();
 
         if (Input.GetKey(KeyCode.Space))
             Brake();
+    }
 
-        //set wheels motor speed
+    /// <summary>
+    /// Set wheels motor speed
+    /// </summary>
+    private void SetWheelsMotorSpeed()
+    {
         _frontWheelJoint.motor = _backWheelJoint.motor = _wheelMotor;
+    }
+
+    /// <summary>
+    /// Set velocity 
+    /// </summary>
+    private void SetVelocity()
+    {
+        _physicValue = GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
+
+        //_wheelMotor.motorSpeed = Mathf.Clamp(
+        //    _wheelMotor.motorSpeed - (acceleration * _movementInput * _physicValue) * Time.deltaTime,
+        //    maxSpeed,
+        //    0);
+
+        _wheelMotor.motorSpeed = Mathf.Clamp(
+            _wheelMotor.motorSpeed - ( _movementInput - _physicValue) * Time.deltaTime,
+            -7000f,
+            7000f);
     }
 
     public void Brake()
