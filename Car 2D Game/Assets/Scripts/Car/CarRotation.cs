@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CarRotation : MonoBehaviour, IPivotRotation, IAngleCarRotation
+public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
 {
     [Header("Pivot")]
     public GameObject pivot;

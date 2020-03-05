@@ -103,7 +103,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// </summary>
     private void AddTargetJoint2D()
     {
-        if(_targetJoint2D)
+        if(_targetJoint2D != null)
         {
             // Add a target joint to the Rigidbody2D GameObject.
             _targetJoint2D = _rigidbody.gameObject.AddComponent<TargetJoint2D>();
@@ -158,7 +158,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     public void AddTargetToTargetJoint2D()
     {
-        if(_targetJoint2D)
+        if(_targetJoint2D != null)
             _targetJoint2D.target = _currentWorldPosition;
     }
 

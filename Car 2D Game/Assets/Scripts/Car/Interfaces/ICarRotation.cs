@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-internal interface IAngleCarRotation
+internal interface IAngleVehicleRotation
 {
     void LimitAngleCar();
 }

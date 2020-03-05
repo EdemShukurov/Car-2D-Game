@@ -2,36 +2,30 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(WheelJoint2D))]
-public class CarBaseMovement : MonoBehaviour, IVehicleMovable
+public class CarBaseMovement : MonoBehaviour
 {
     public const float GRAVITY = 9.81f;
 
-    [Header("Wheels Joint")]
-
-    [SerializeField] protected WheelJoint2D _frontWheelJoint;
-    [SerializeField] protected WheelJoint2D _backWheelJoint;
-
-    [Header("Movement properies")]
- 
-    [SerializeField] private float brakeForce = 800f;
-    [SerializeField] private float maxSpeed = -3500f;
-    [SerializeField] private float jumpForce = 9f;
-    [SerializeField] private float maxBackSpeed = 1000f;
-    [SerializeField] private float acceleration = 500f;
-    [SerializeField] private float deacceleration = -300f;
-
-    private int _centerScreenX;
-
     protected Rigidbody2D _rigidBody2D;
 
-    private float _movementInput;
-    private float _deltaMovement;
+    [Header("Wheels Joint")]
+    [SerializeField] private WheelJoint2D _frontWheelJoint;
+    [SerializeField] private WheelJoint2D _backWheelJoint;
 
+
+    private static IAngleVehicleRotation _carRotation;
+
+    #region Movement Propeties
+    private readonly float _brakeForce = 1000f;
+    private readonly float _maxSpeed = 200f;
+    private readonly float _maxBackSpeed = 1000f;
+    #endregion
+
+    private int _centerScreenX;
+    private float _movementInput;
     private float _physicValue;
 
     private JointMotor2D _wheelMotor;
-
-    private static IAngleCarRotation _carRotation;
 
     private void Start()
     {
@@ -53,38 +47,33 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     {
         _carRotation.LimitAngleCar();
 
-       // _movementInput = Input.GetAxis("Horizontal");
-
-
-
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
         {
-            _deltaMovement = Input.mousePosition.x;
-            GetTouch(_deltaMovement);
-
-            SetWheelsMotorSpeed();
+            GetTouch(Input.mousePosition.x);
+            SetUseMotor(false);
         }
-        UpdateVelocity();
+        else
+        {
+            _movementInput = 0f;
+        }
 
+        UpdateVelocity();
     }
- 
 
     /// <summary>
     /// Get touch/mouseclick position to determine speed via _deltaMovement variable
     /// </summary>
-    /// <param name="touchPos">touch/mouseclick position</param>
-    protected void GetTouch(float touchPos)
+    /// <param name="touchPosition">touch/mouseclick position</param>
+    protected void GetTouch(float touchPosition)
     {
-        if (touchPos > _centerScreenX)
+        if (touchPosition != _centerScreenX)
         {
-            _movementInput = 1f;
+            _movementInput = (touchPosition - _centerScreenX) / _centerScreenX;
         }
-        if (touchPos < _centerScreenX)
+        else
         {
-            _movementInput = -1f;
+            _movementInput = .0f;
         }
-
-       // print("touchPos " + touchPos + "_movementInput   " + _movementInput);
     }
 
     /// <summary>
@@ -92,24 +81,7 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// </summary>
     private void UpdateVelocity()
     {
-        //_wheelMotor.motorSpeed = 10f * _movementInput;
-
-        //determine action
-        switch (_movementInput)
-        {
-            case -1f:
-                ReverseGear();
-                break;
-
-            case 0f:
-                DisableMovement();
-                break;
-
-            case 1f:
-                Gas();
-                break;
-        }
-        //SetVelocity();
+        _rigidBody2D.AddForce(-Vector2.left * _maxSpeed * _movementInput, ForceMode2D.Impulse);
 
         if (Input.GetKey(KeyCode.Space))
             Brake();
@@ -120,98 +92,40 @@ public class CarBaseMovement : MonoBehaviour, IVehicleMovable
     /// </summary>
     private void SetWheelsMotorSpeed()
     {
+        SetUseMotor(true);
         _frontWheelJoint.motor = _backWheelJoint.motor = _wheelMotor;
     }
 
     /// <summary>
-    /// Set velocity 
+    /// Set UseMotor for every WheelJoint2D
     /// </summary>
-    private void SetVelocity()
+    /// <param name="useMotor"></param>
+    private void SetUseMotor(bool useMotor)
     {
-        _physicValue = GetPhysicInfluenceValue();
-
-        //_wheelMotor.motorSpeed = Mathf.Clamp(
-        //    _wheelMotor.motorSpeed - (acceleration * _movementInput * _physicValue) * Time.deltaTime,
-        //    maxSpeed,
-        //    0);
-
-        _wheelMotor.motorSpeed = Mathf.Clamp(
-            _wheelMotor.motorSpeed - ( _movementInput - _physicValue) * Time.deltaTime,
-            -7000f,
-            7000f);
+        _frontWheelJoint.useMotor = _backWheelJoint.useMotor = useMotor;
     }
-
-    public void DisableMovement()
-    {
-        Debug.LogWarning("DisableMovement");
-        _physicValue = GetPhysicInfluenceValue();
-
-        if (_wheelMotor.motorSpeed < 0f || (_wheelMotor.motorSpeed == 0f && transform.eulerAngles.z < 0f))
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed - (deacceleration - _physicValue) * Time.deltaTime,
-                maxSpeed,
-                0f);
-        }
-
-        if (_wheelMotor.motorSpeed > 0f || (_wheelMotor.motorSpeed == 0f && transform.eulerAngles.z > 0f))
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed - (-deacceleration - _physicValue) * Time.deltaTime,
-                0f,
-                maxBackSpeed);
-        }
-    }
-
-
-    public void ReverseGear()
-    {
-        Debug.LogWarning("ReverseGear");
-        if (_wheelMotor.motorSpeed > 0f)
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed + brakeForce * Time.deltaTime, //- _deltaMovement,
-                0f,
-                maxBackSpeed);
-        }
-
-        if (_wheelMotor.motorSpeed == 0f)
-        {
-            _wheelMotor.motorSpeed = _wheelMotor.motorSpeed + brakeForce / 10f; //- _deltaMovement;
-        }
-    }
-
 
     public void Brake()
     {
+        //_movementInput = 0f;
         Debug.LogWarning("Brake");
         if (_wheelMotor.motorSpeed > 0f)
         {
             _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed - brakeForce * Time.deltaTime,
+                _wheelMotor.motorSpeed - _brakeForce * Time.deltaTime,
                 0f,
-                maxBackSpeed);
+                _maxBackSpeed);
         }
 
         if (_wheelMotor.motorSpeed < 0f)
         {
             _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed + brakeForce * Time.deltaTime,
-                maxSpeed,
+                _wheelMotor.motorSpeed + _brakeForce * Time.deltaTime,
+                _maxSpeed,
                 0f);
         }
-    }
 
-    public void Gas()
-    {
-        Debug.LogWarning("Gas");
-
-        _physicValue = GetPhysicInfluenceValue();
-
-        _wheelMotor.motorSpeed = Mathf.Clamp(
-            _wheelMotor.motorSpeed - (acceleration + _deltaMovement - _physicValue) * Time.deltaTime,
-            maxSpeed,
-            0);
+        SetWheelsMotorSpeed();
     }
 
     private float GetPhysicInfluenceValue()
