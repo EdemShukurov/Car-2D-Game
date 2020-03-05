@@ -71,8 +71,13 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-
-
+    /// <summary>
+    /// Spawn from Pool
+    /// </summary>
+    /// <param name="tag">prefab type</param>
+    /// <param name="position">where prefab should be placed</param>
+    /// <param name="rotation">prefab's rotation</param>
+    /// <returns></returns>
     public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation)
     {
         if (poolDictionary.ContainsKey(tag) == false)
@@ -86,7 +91,6 @@ public class ObjectPooler : MonoBehaviour
             Debug.LogWarning("Queue is epmty, tag: " + tag);
             return null;
         }
-           
        
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
 

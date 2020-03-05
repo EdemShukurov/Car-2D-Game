@@ -1,24 +1,39 @@
 fileFormatVersion: 2
 guid: 616e7093c6258c443a09b25324933be6
-timeCreated: 1458153525
-licenseType: Store
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: lamp
-    21300002: flag_1
-    21300004: flag_2
-    21300006: flag_3
-    21300008: flag_4
-    21300010: links2_5
-    21300012: links2_6
-  serializedVersion: 2
+  internalIDToNameTable:
+  - first:
+      213: 21300000
+    second: lamp
+  - first:
+      213: 21300002
+    second: flag_1
+  - first:
+      213: 21300004
+    second: flag_2
+  - first:
+      213: 21300006
+    second: flag_3
+  - first:
+      213: 21300008
+    second: flag_4
+  - first:
+      213: 21300010
+    second: links2_5
+  - first:
+      213: 21300012
+    second: links2_6
+  externalObjects: {}
+  serializedVersion: 10
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
+    sRGBTexture: 1
     linearTexture: 0
-    correctGamma: 0
     fadeOut: 0
     borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
     mipMapFadeDistanceStart: 1
     mipMapFadeDistanceEnd: 3
   bumpmap:
@@ -27,37 +42,60 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
   isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
   grayScaleToAlpha: 0
-  generateCubemap: 0
+  generateCubemap: 6
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 7
-  cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
+    serializedVersion: 2
     filterMode: -1
     aniso: -1
-    mipBias: -1
-    wrapMode: 1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
-  rGBM: 0
   compressionQuality: 50
-  allowsAlphaSplitting: 0
   spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
   alphaIsTransparency: 1
+  spriteTessellationDetail: -1
   textureType: 8
-  buildTargetSettings: []
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
+    serializedVersion: 2
     sprites:
-    - name: lamp
+    - serializedVersion: 2
+      name: lamp
       rect:
         serializedVersion: 2
         x: 24
@@ -67,17 +105,18 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.4965385, y: 0.5119691}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -27.108849, y: 32.674133}
-        - {x: -56.10885, y: 9.674133}
-        - {x: -56.10885, y: -24.325867}
-        - {x: -55.10885, y: -26.325867}
-        - {x: -39.10885, y: -35.325867}
-        - {x: 40.89115, y: -35.325867}
-        - {x: 56.89115, y: -30.325867}
-        - {x: 56.89115, y: 22.674133}
-        - {x: 18.891151, y: 32.674133}
-    - name: flag_1
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02305410000000000800000000000000
+      internalID: 21300000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flag_1
       rect:
         serializedVersion: 2
         x: 159
@@ -87,16 +126,18 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5005185, y: 0.9051571}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -26.527481, y: 7.11322}
-        - {x: -26.527481, y: -4.88678}
-        - {x: -22.527481, y: -17.88678}
-        - {x: -4.527481, y: -67.88678}
-        - {x: 2.472519, y: -67.88678}
-        - {x: 6.472519, y: -59.88678}
-        - {x: 26.472519, y: -3.8867798}
-        - {x: 26.472519, y: 7.11322}
-    - name: flag_2
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22305410000000000800000000000000
+      internalID: 21300002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flag_2
       rect:
         serializedVersion: 2
         x: 229
@@ -106,16 +147,18 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.5157557, y: 0.88882244}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -27.335052, y: 8.338318}
-        - {x: -27.335052, y: -3.6616821}
-        - {x: -23.335052, y: -16.661682}
-        - {x: -5.3350525, y: -66.66168}
-        - {x: 1.6649475, y: -66.66168}
-        - {x: 5.6649475, y: -58.661682}
-        - {x: 25.664948, y: -2.6616821}
-        - {x: 25.664948, y: 8.338318}
-    - name: flag_3
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42305410000000000800000000000000
+      internalID: 21300004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flag_3
       rect:
         serializedVersion: 2
         x: 301
@@ -125,16 +168,18 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.49999943, y: 0.9061906}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -26.49997, y: 7.2233276}
-        - {x: -26.49997, y: -4.7766724}
-        - {x: -25.49997, y: -8.776672}
-        - {x: -4.4999695, y: -69.77667}
-        - {x: 0.5000305, y: -69.77667}
-        - {x: 4.5000305, y: -67.77667}
-        - {x: 26.50003, y: -3.7766724}
-        - {x: 26.50003, y: 7.2233276}
-    - name: flag_4
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62305410000000000800000000000000
+      internalID: 21300006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flag_4
       rect:
         serializedVersion: 2
         x: 376
@@ -144,18 +189,29 @@ TextureImporter:
       alignment: 9
       pivot: {x: 0.47714123, y: 0.9205976}
       border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 28.28009, y: -108.88367}
-        - {x: 29.28009, y: -38.883667}
-        - {x: 29.28009, y: 11.116333}
-        - {x: -26.71991, y: 11.116333}
-        - {x: -26.71991, y: -128.88367}
-        - {x: -20.71991, y: -128.88367}
-        - {x: -12.71991, y: -117.88367}
-        - {x: 15.28009, y: -128.88367}
-        - {x: 25.28009, y: -128.88367}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82305410000000000800000000000000
+      internalID: 21300008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
   spritePackingTag: 
+  pSDRemoveMatte: 1
+  pSDShowRemoveMatteOption: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 

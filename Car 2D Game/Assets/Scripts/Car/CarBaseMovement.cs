@@ -81,7 +81,9 @@ public class CarBaseMovement : MonoBehaviour
     /// </summary>
     private void UpdateVelocity()
     {
-        _rigidBody2D.AddForce(-Vector2.left * _maxSpeed * _movementInput, ForceMode2D.Impulse);
+
+        float speed = Mathf.Clamp(_maxSpeed * _movementInput, -_maxSpeed, _maxSpeed);
+        _rigidBody2D.AddForce(-Vector2.left * speed, ForceMode2D.Impulse);
 
         if (Input.GetKey(KeyCode.Space))
             Brake();

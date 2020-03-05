@@ -22,7 +22,6 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     private Vector2 _currentWorldPosition;
 
-    private Rigidbody2D _rigidbody;
     private TargetJoint2D _targetJoint2D;
 
     private static IPivotRotation _pivotRotation;
@@ -41,10 +40,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     private void Start()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
         _pivotRotation = GetComponent<CarRotation>();
-
-        _originalCarMass = _rigidbody.mass;
+        _rigidBody2D = GetComponent<Rigidbody2D>();
+        _originalCarMass = _rigidBody2D.mass;
     }
 
 
@@ -94,8 +92,8 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// </summary>
     private void ChangeRigidBody2DProperties()
     {
-        _rigidbody.freezeRotation = true;
-        _rigidbody.mass = 10f;        
+        _rigidBody2D.freezeRotation = true;
+        _rigidBody2D.mass = 10f;        
     }
 
     /// <summary>
@@ -103,16 +101,13 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// </summary>
     private void AddTargetJoint2D()
     {
-        if(_targetJoint2D != null)
-        {
-            // Add a target joint to the Rigidbody2D GameObject.
-            _targetJoint2D = _rigidbody.gameObject.AddComponent<TargetJoint2D>();
-            _targetJoint2D.dampingRatio = _damping;
-            _targetJoint2D.frequency = _frequency;
-            _targetJoint2D.maxForce = _maxForce;
+        // Add a target joint to the Rigidbody2D GameObject.
+        _targetJoint2D = _rigidBody2D.gameObject.AddComponent<TargetJoint2D>();
+        _targetJoint2D.dampingRatio = _damping;
+        _targetJoint2D.frequency = _frequency;
+        _targetJoint2D.maxForce = _maxForce;
 
-            AddAnchorToTargetJoint2D();
-        }
+        AddAnchorToTargetJoint2D();
 
     }
 
@@ -183,8 +178,8 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// </summary>
     private void RefreshRigidBody2DProperties()
     {
-        _rigidbody.freezeRotation = false;
-        _rigidbody.mass = _originalCarMass;
+        _rigidBody2D.freezeRotation = false;
+        _rigidBody2D.mass = _originalCarMass;
     }
 
 

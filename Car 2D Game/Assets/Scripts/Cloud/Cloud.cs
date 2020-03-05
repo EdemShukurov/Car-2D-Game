@@ -12,7 +12,7 @@ public class Cloud : MonoBehaviour, IPooledObject
     private CloudSpawner _cloudSpawner;
 
 
-    private void Start()
+    private void OnEnable()
     {
         _cloudSpawner = CloudSpawner.Instance;
 
@@ -31,7 +31,7 @@ public class Cloud : MonoBehaviour, IPooledObject
         float yPosition = Random.Range(_downSide, _upSide);
         transform.position = new Vector2(_xPosition, yPosition);
 
-        _speed = Random.Range(3f, 5f);
+        _speed = Random.Range(3f, 3.5f);
     }
 
     private void Update()

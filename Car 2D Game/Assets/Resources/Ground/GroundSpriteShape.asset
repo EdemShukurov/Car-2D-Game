@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: GroundSpriteShape
   m_EditorClassIdentifier: 
   m_Angles:
-  - m_Start: -47
-    m_End: 46
+  - m_Start: -45
+    m_End: 45
     m_Order: 0
     m_Sprites:
-    - {fileID: 21300000, guid: 660832bf42ef0734ab68554f344f48a0, type: 3}
-  m_FillTexture: {fileID: 2800000, guid: dc28604e30081ce44a3e8f108fd5b64f, type: 3}
+    - {fileID: 21300000, guid: c4c7980a2f727374bb8a21bfb66a38ff, type: 3}
+  m_FillTexture: {fileID: 2800000, guid: 8510358524c534340b53fc56f233584d, type: 3}
   m_CornerSprites:
   - m_CornerType: 0
     m_Sprites:
