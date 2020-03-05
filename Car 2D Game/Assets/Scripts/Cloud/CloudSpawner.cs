@@ -18,8 +18,8 @@ public class CloudSpawner : MonoBehaviour
     {
         Instance = this;
 
-        Time.timeScale = 5.8f;
-        Time.fixedDeltaTime *= Time.timeScale;
+        //Time.timeScale = 5.8f;
+        //Time.fixedDeltaTime *= Time.timeScale;
     }
 
     #endregion
