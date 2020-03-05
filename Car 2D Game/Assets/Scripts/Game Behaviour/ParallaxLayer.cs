@@ -23,8 +23,8 @@ public class ParallaxLayer : MonoBehaviour
         _dist = cam.transform.position.x * parallaxEffect;
         _temp = cam.transform.position.x * (1f - parallaxEffect);
 
-        transform.position = new Vector3(_startPos + _dist, 
-                                        cam.transform.position.y + _offsetY, 
+        transform.position = new Vector3(_startPos + _dist,
+                                        cam.transform.position.y + _offsetY,
                                         transform.position.z);
 
         if (_temp > _startPos + _length)
