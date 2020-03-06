@@ -78,7 +78,7 @@ public class ObjectPooler : MonoBehaviour
     /// <param name="position">where prefab should be placed</param>
     /// <param name="rotation">prefab's rotation</param>
     /// <returns></returns>
-    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation)
+    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation, Transform parent = null)
     {
         if (poolDictionary.ContainsKey(tag) == false)
         {
@@ -93,6 +93,11 @@ public class ObjectPooler : MonoBehaviour
         }
        
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+
+        if(parent != null)
+        {
+            objectToSpawn.transform.parent = parent;
+        }
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;

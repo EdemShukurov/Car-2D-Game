@@ -26,6 +26,7 @@ public class Cloud : MonoBehaviour, IPooledObject
         }
     }
 
+
     public void OnObjectSpawned()
     {
         float yPosition = Random.Range(_downSide, _upSide);

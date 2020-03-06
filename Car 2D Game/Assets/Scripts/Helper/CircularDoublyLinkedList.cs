@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public class CircularDoublyLinkedList<T> : IEnumerable<T>
 {
-
     private DoublyNode<T> head; // the first element
     private int count;
 
     public int Count { get { return count; } }
     public bool IsEmpty { get { return count == 0; } }
+
 
     public T GetActiveElement()
     {
