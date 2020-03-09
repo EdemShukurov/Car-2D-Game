@@ -31,14 +31,14 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
         {
             SetPivot(_backWheelCollision.transform.position);
             targetAngle = Quaternion.Euler(0f, 0f, -transform.eulerAngles.z);
-            StartCoroutine(RotatePivot(targetAngle, _speedChangeAngle));
         }
         else
         {
             SetPivot(_frontWheelCollision.transform.position);
             targetAngle = Quaternion.Euler(0f, 0f, transform.eulerAngles.z);
-            StartCoroutine(RotatePivot(targetAngle, _speedChangeAngle));
         }
+
+        StartCoroutine(RotatePivot(targetAngle, _speedChangeAngle));
 
         //DetachPivot();
     }
@@ -111,13 +111,6 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
 
         return Mathf.Clamp(angle, min, max);
     }
-
-
-    private Quaternion RotateAngleCar(float angle)
-    {
-        return Quaternion.Euler(0f, 0f, angle);
-    }
-
-
-
+    
+    private Quaternion RotateAngleCar(float angle) => Quaternion.Euler(0f, 0f, angle);
 }
