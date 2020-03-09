@@ -16,21 +16,19 @@ public class ImageSlider : MonoBehaviour
 
     private void Start()
     {
-        _offsetSlide = 34f;
+        _offsetSlide = 275f;
 
         _rectTransform = GetComponent<RectTransform>();
-        var childs = GetComponentsInChildren<HorizontalLayoutGroup>();
-
     }
 
     public void SlideForward()
     {
-        _rectTransform.DOAnchorPos(new Vector2(gameObject.transform.position.x + _offsetSlide, 0f ) ,1f);
+        _rectTransform.DOAnchorPosX(_rectTransform.anchoredPosition.x + _offsetSlide, 1f);
     }
 
     public void SlideBack()
     {
-        _rectTransform.DOAnchorPos(new Vector2(gameObject.transform.position.x - _offsetSlide, 0f), 1f);
+        _rectTransform.DOAnchorPosX(_rectTransform.anchoredPosition.x - _offsetSlide, 1f);
     }
 
 }

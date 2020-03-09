@@ -3,53 +3,57 @@ using DG.Tweening;
 
 public class BaseMenuActions : MonoBehaviour
 {
-    public RectTransform commonCanvas;
+    public Rigidbody2D car;
+
+    public RectTransform commonPanel;
     public RectTransform pausePanel;
     public RectTransform infoPanel;
     public RectTransform slidePanel;
 
-    private Vector2 _startPosition, _targetPosition;
+    private Vector2 _startPausePosition, _startPanelPosition, _startSlidePosition, _startInfoPosition, _targetPosition;
 
-    private RectTransform _currentPanel;
-
-    private float _duration, _timeScale;
+    private float _duration;
 
     private void Start()
     {
-        _startPosition = new Vector2(0f, 500f);
+        _startPausePosition = pausePanel.anchoredPosition;
+        _startPanelPosition = commonPanel.anchoredPosition;
+        _startSlidePosition = slidePanel.anchoredPosition;
+        _startInfoPosition = infoPanel.anchoredPosition;
+
         _targetPosition = Vector2.zero;
 
-        _duration = _timeScale = 1f;
+        _duration = 1f;
+    }
 
-        //pausePanel.DOKill();
-        //commonCanvas.DOKill();
-        //slidePanel.DOKill();
-        //infoPanel.DOKill();
+    public void SwitchPanel(RectTransform panelFrom, RectTransform panelTo, Vector2 initPosition, Vector2? targetPosition)
+    {
+        //DOTween.Kill(panelFrom.transform, true);
+        //DOTween.Kill(panelTo.transform, true);
+        //panelFrom.DOKill();
+        //panelTo.DOKill();
+        Vector2 _targetPosition = targetPosition ?? Vector2.zero;
 
+        panelFrom.DOAnchorPos(initPosition, _duration);
+        panelTo.DOAnchorPos(_targetPosition, _duration);
     }
 
     public void SetResume()
     {
-        Tween tween1 = pausePanel.DOAnchorPos(_startPosition, _duration);
-        tween1?.Kill();
-        Tween tween2 = commonCanvas.DOAnchorPos(_startPosition, _duration);
-        tween2?.Kill();
+        SwitchPanel(pausePanel, commonPanel, _startPausePosition, _startPanelPosition);
 
-        _currentPanel = null;
-
-        Invoke("RefreshTime", _duration);
+        //UnFreeze all positions and rotations
+        car.constraints = RigidbodyConstraints2D.None;
+        
+        //Invoke("RefreshTime", _duration);
     }
 
     public void SetPause()
-    {
-        Tween tween1 = pausePanel.DOAnchorPos(_targetPosition, _duration);
-        tween1?.Kill();
-        Tween tween2 = commonCanvas.DOAnchorPos(_targetPosition, _duration);
-        tween2?.Kill();
+    {       
+        SwitchPanel(pausePanel, commonPanel, Vector2.zero, Vector2.zero);
 
-        _currentPanel = pausePanel;
-
-        Invoke("BrakeTime", _duration);
+        //Freeze all positions and rotations
+        car.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
     private void BrakeTime()
@@ -59,21 +63,32 @@ public class BaseMenuActions : MonoBehaviour
 
     private void RefreshTime()
     {
-        Time.timeScale = 1F;
+        Time.timeScale = 1f;
     }
 
-    public void OpenWindow(RectTransform windowToClose)
+    public void SetSlideMenu()
     {
-        Tween tween2 = windowToClose.DOAnchorPos(Vector2.zero, _duration);
-        tween2?.Kill();
-
-        CloseWindow(_currentPanel);
+        SwitchPanel(pausePanel, slidePanel, _startPausePosition, new Vector2(-800f, 50f));
     }
 
-    public void CloseWindow(RectTransform windowToOpen)
+    public void SetInfoMenu()
     {
-        Tween tween2 = windowToOpen.DOAnchorPos(_startPosition, _duration);
-        tween2?.Kill();
+        SwitchPanel(slidePanel, infoPanel, _startSlidePosition, null);
+    }
+
+    public void BackToPauseMenuFromSlide()
+    {
+        SwitchPanel(slidePanel, pausePanel, _startSlidePosition, null);
+    }
+
+    public void BackToPauseMenuFromInfo()
+    {
+        SwitchPanel(infoPanel, pausePanel, _startInfoPosition, null);
+    }
+
+    public void BackToSlideMenu()
+    {
+        SwitchPanel(infoPanel, slidePanel, _startSlidePosition, null);
     }
 
     public void QuitGame()
