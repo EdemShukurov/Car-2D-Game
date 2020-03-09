@@ -7,6 +7,8 @@ public class CarBaseMovement : MonoBehaviour
 {
     public const float GRAVITY = 9.81f;
 
+    public event Action<bool> OnSmokeSet;
+
     protected Rigidbody2D _rigidBody2D;
     protected float _movementInput;
 
@@ -114,6 +116,8 @@ public class CarBaseMovement : MonoBehaviour
     public void Brake()
     {
         StartCoroutine(SmoothBrake(_brakeTime));
+
+        OnSmokeSet?.Invoke(_speed == Speed.Increase ? true : false);
     }
 
     /// <summary>
