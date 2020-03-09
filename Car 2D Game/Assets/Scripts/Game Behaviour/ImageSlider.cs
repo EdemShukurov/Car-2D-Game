@@ -1,13 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
-
-public enum SlideDirection
-{
-    Next,
-    Previous
-}
-
 
 public class ImageSlider : MonoBehaviour
 {

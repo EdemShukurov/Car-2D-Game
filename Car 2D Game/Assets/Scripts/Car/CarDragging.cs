@@ -59,7 +59,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         if (collider == null || collider.gameObject.tag != "Car")
         {
             // not drag, do car base movement
-            base.GetTouch(eventData.position.x);
+            _movementInput = base.GetTouch(eventData.position.x);
             return;
         }
 
@@ -88,15 +88,6 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     }
 
     /// <summary>
-    /// Cancel the car rotation and decrease it's mass in order to the car will become easier
-    /// </summary>
-    private void ChangeRigidBody2DProperties()
-    {
-        _rigidBody2D.freezeRotation = true;
-        _rigidBody2D.mass = 10f;        
-    }
-
-    /// <summary>
     /// Add TargetJoint2D to Car
     /// </summary>
     private void AddTargetJoint2D()
@@ -112,6 +103,15 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     }
 
     /// <summary>
+    /// Cancel the car rotation and decrease it's mass in order to the car will become easier
+    /// </summary>
+    private void ChangeRigidBody2DProperties()
+    {
+        _rigidBody2D.freezeRotation = true;
+        _rigidBody2D.mass = 10f;        
+    }
+
+    /// <summary>
     /// Attach the anchor to the local-point where we clicked
     /// </summary>
     private void AddAnchorToTargetJoint2D()
@@ -119,9 +119,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         _targetJoint2D.anchor = _targetJoint2D.transform.InverseTransformPoint(_currentWorldPosition);
     }
 
-
     protected override void Update()
     {
+        Debug.Log("overr");
         if (_useDrag == true)
         {
             if (Input.GetMouseButtonUp(0))
@@ -136,8 +136,6 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         // car base movement
         else
             base.Update();
-
-
     }
 
     /// <summary>

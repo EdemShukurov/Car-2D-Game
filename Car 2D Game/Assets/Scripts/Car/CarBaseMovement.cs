@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(WheelJoint2D))]
@@ -7,25 +8,24 @@ public class CarBaseMovement : MonoBehaviour
     public const float GRAVITY = 9.81f;
 
     protected Rigidbody2D _rigidBody2D;
+    protected float _movementInput;
 
-    [Header("Wheels Joint")]
-    [SerializeField] private WheelJoint2D _frontWheelJoint;
-    [SerializeField] private WheelJoint2D _backWheelJoint;
-
+    private readonly float _maxSpeed = 50f;
+    private readonly float _brakeTime = 0.75f;
+    private readonly float _brakeDrag = 3f;
 
     private static IAngleVehicleRotation _carRotation;
-
-    #region Movement Propeties
-    private readonly float _brakeForce = 1000f;
-    private readonly float _maxSpeed = 200f;
-    private readonly float _maxBackSpeed = 1000f;
-    #endregion
-
+    private Speed _speed;
+    
     private int _centerScreenX;
-    private float _movementInput;
-    private float _physicValue;
 
-    private JointMotor2D _wheelMotor;
+    private enum Speed
+    {
+        Increase,
+        Decrease,
+        Brake,
+        NotAction
+    }
 
     private void Start()
     {
@@ -33,105 +33,105 @@ public class CarBaseMovement : MonoBehaviour
         _centerScreenX = Screen.width / 2;
 
         _rigidBody2D = GetComponent<Rigidbody2D>();
-
-        if (_rigidBody2D == null || _frontWheelJoint == null || _backWheelJoint == null)
-        {
-            throw new ArgumentNullException();
-        }
-
-        _wheelMotor = _backWheelJoint.motor;
         _carRotation = GetComponent<CarRotation>();
+
+        _speed = Speed.NotAction;
     }
 
     protected virtual void Update()
     {
+        Debug.Log("virt");
         _carRotation.LimitAngleCar();
 
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
         {
-            GetTouch(Input.mousePosition.x);
-            SetUseMotor(false);
+            _movementInput = GetTouch(Input.mousePosition.x);
         }
         else
         {
             _movementInput = 0f;
         }
 
+        DetermineAction();
+    }
+
+    private void DetermineAction()
+    {
+        if (UseBrake())
+        {
+            Brake();
+            _speed = Speed.Brake;
+           
+            return;
+        }
+        else if (_movementInput == 0f)
+        {
+            _speed = Speed.NotAction;
+        }
+        else if (_movementInput < 0f)
+        {
+            _speed = Speed.Decrease;
+        }
+        else
+        {
+            _speed = Speed.Increase;
+        }
+        
         UpdateVelocity();
     }
 
     /// <summary>
-    /// Get touch/mouseclick position to determine speed via _deltaMovement variable
+    /// if we suddenly changed direction, we should break
     /// </summary>
+    /// <returns></returns>
+    private bool UseBrake() => 
+        (_movementInput > 0f && _speed == Speed.Decrease) || 
+        (_movementInput < 0f && _speed == Speed.Increase) || 
+        Input.GetKey(KeyCode.Space);
+
+
+    /// <summary>
+    /// Get touch/mouseclick position to determine speed
+    /// /// </summary>
     /// <param name="touchPosition">touch/mouseclick position</param>
-    protected void GetTouch(float touchPosition)
-    {
-        if (touchPosition != _centerScreenX)
-        {
-            _movementInput = (touchPosition - _centerScreenX) / _centerScreenX;
-        }
-        else
-        {
-            _movementInput = .0f;
-        }
-    }
+    protected float GetTouch(float touchPosition) => _movementInput = (touchPosition - _centerScreenX) / _centerScreenX;
 
     /// <summary>
     /// Update car velocity
     /// </summary>
     private void UpdateVelocity()
     {
+        if (_speed == Speed.Decrease || _speed == Speed.Increase)
+            _rigidBody2D.drag = 0f;
 
+        // speed is always in this limits, Clamp is needed to avoid NaN excepion while forcing, 
+        // as _movementInput may be (in unityedit mode) more 1 or less -1
         float speed = Mathf.Clamp(_maxSpeed * _movementInput, -_maxSpeed, _maxSpeed);
-        _rigidBody2D.AddForce(-Vector2.left * speed, ForceMode2D.Impulse);
-
-        if (Input.GetKey(KeyCode.Space))
-            Brake();
-    }
-
-    /// <summary>
-    /// Set wheels motor speed
-    /// </summary>
-    private void SetWheelsMotorSpeed()
-    {
-        SetUseMotor(true);
-        _frontWheelJoint.motor = _backWheelJoint.motor = _wheelMotor;
-    }
-
-    /// <summary>
-    /// Set UseMotor for every WheelJoint2D
-    /// </summary>
-    /// <param name="useMotor"></param>
-    private void SetUseMotor(bool useMotor)
-    {
-        _frontWheelJoint.useMotor = _backWheelJoint.useMotor = useMotor;
+        
+        _rigidBody2D.AddForce(Vector2.right * speed, ForceMode2D.Impulse);
     }
 
     public void Brake()
     {
-        //_movementInput = 0f;
-        Debug.LogWarning("Brake");
-        if (_wheelMotor.motorSpeed > 0f)
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed - _brakeForce * Time.deltaTime,
-                0f,
-                _maxBackSpeed);
-        }
-
-        if (_wheelMotor.motorSpeed < 0f)
-        {
-            _wheelMotor.motorSpeed = Mathf.Clamp(
-                _wheelMotor.motorSpeed + _brakeForce * Time.deltaTime,
-                _maxSpeed,
-                0f);
-        }
-
-        SetWheelsMotorSpeed();
+        StartCoroutine(SmoothBrake(_brakeTime));
     }
 
-    private float GetPhysicInfluenceValue()
+    /// <summary>
+    /// Use Coroutine in order to rotate pivot smoothly
+    /// </summary>
+    /// <param name="targetAngle"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    private IEnumerator SmoothBrake(float time)
     {
-        return GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
+        while (time > 0.0f)
+        {
+            time -= Time.deltaTime;
+            _rigidBody2D.drag = _brakeDrag;
+
+            yield return null;
+        }
     }
+
+    private float GetPhysicInfluenceValue() => GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
 }
