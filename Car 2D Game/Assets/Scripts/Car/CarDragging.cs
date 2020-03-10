@@ -121,7 +121,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     protected override void Update()
     {
-        Debug.Log("overr");
+        //Debug.Log("overr");
         if (_useDrag == true)
         {
             if (Input.GetMouseButtonUp(0))

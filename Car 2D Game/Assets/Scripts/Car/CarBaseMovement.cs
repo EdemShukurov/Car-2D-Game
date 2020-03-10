@@ -42,7 +42,7 @@ public class CarBaseMovement : MonoBehaviour
 
     protected virtual void Update()
     {
-        Debug.Log("virt");
+        //Debug.Log("virt");
         _carRotation.LimitAngleCar();
 
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))

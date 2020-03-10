@@ -1,41 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.Game_Behaviour
 {
     public class GradientTransition: MonoBehaviour
     {
-        public List<SpriteRenderer> sky;
+        public Material gradient;
 
-        public Color A = Color.blue;
-        public Color B = Color.blue;
-        public float speed = 1.0f;
 
         private const string TAG = "Car";
-        private float duration = 1.0f;
+        private float _duration = 2.5f;
+        private bool _carTouched;
 
-        private void Start()
-        {
-            var t = sky[0].color;
-        }
+        private string _initTopColor = "47188B";
+        private string _initBottomColor = "BFBBCB";
+        private string _targetTopColor = "fa8856";
+        private string _targetBottomColor = "7ae0ec";
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag(TAG))
             {
-                foreach (var spriteRenderer in sky)
-                {
-                    spriteRenderer.color = Color.Lerp(spriteRenderer.color, B, Mathf.PingPong(Time.time * speed, 1.0f));
+                _carTouched = true;
 
-                }
+                //gradient.SetColor("_TopColor", Color.red); /*= Color.Lerp(spriteRenderer.color, B, Mathf.PingPong(Time.time * speed, 1.0f))*/
+                //gradient.SetColor("_BottomColor", Color.white);
             }
         }
 
-        Color HexToColor(string hex)
+        private Color HexToColor(string hex)
         {
             byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
             byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
@@ -44,11 +37,70 @@ namespace Assets.Scripts.Game_Behaviour
         }
 
 
-        void Update()
+        private void Update()
         {
-            float lerp = Mathf.PingPong(Time.time, duration) / duration;
-            //sRender.material.SetColor("_Color", Color.Lerp(HexToColor("fe805e"), HexToColor("fa8856"), lerp)); //bottom
-            //sRender.material.SetColor("_Color2", Color.Lerp(HexToColor("527fc1"), HexToColor("7ae0ec"), lerp)); //top
+            if(_carTouched)
+            {
+                float lerp = Mathf.PingPong(Time.time, _duration) / _duration;
+
+                gradient.SetColor("_TopColor", Color.Lerp(HexToColor(_initTopColor), HexToColor(_targetTopColor), lerp));
+                gradient.SetColor("_BottomColor", Color.Lerp(HexToColor(_initBottomColor), HexToColor(_targetBottomColor), lerp));
+
+                Invoke("Stop", _duration);
+                //StartCoroutine(ChangeColor(_targetTopColor, _targetBottomColor, _duration));
+                //if (lerp > 0.005f)
+                //{
+                //    Debug.Log("lerp " + lerp);
+                //    gradient.SetColor("_TopColor", Color.Lerp(HexToColor(_initTopColor), HexToColor(_targetTopColor), lerp)); 
+                //    gradient.SetColor("_BottomColor", Color.Lerp(HexToColor(_initBottomColor), HexToColor(_targetBottomColor), lerp));
+
+                //}
+                //else
+                //{
+                //    _carTouched = false;
+                //}
+
+                //Swap(ref _initTopColor, ref _targetTopColor);
+                //Swap(ref _initBottomColor, ref _targetBottomColor);
+            }
+        }
+
+
+        private void Stop()
+        {
+            _carTouched = false;
+
+            //Swap(ref _initTopColor, ref _targetTopColor);
+            //Swap(ref _initBottomColor, ref _targetBottomColor);
+
+        }
+        /// <summary>
+        /// Use Coroutine in order to change color smoothly
+        /// </summary>
+        /// <param name="targetAngle"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        private IEnumerator ChangeColor(string targetTopColor, string targetBottomColor, float duration)
+        {
+            float lerp;
+            //Quaternion startAngle = pivot.transform.rotation;
+
+            while (duration > 0.0f)
+            {
+                duration -= Time.deltaTime;
+                lerp = Mathf.PingPong(Time.time, duration) / duration;
+
+                gradient.SetColor("_TopColor", Color.Lerp(HexToColor(_initTopColor), HexToColor(_targetTopColor), lerp));
+                gradient.SetColor("_BottomColor", Color.Lerp(HexToColor(_initBottomColor), HexToColor(_targetBottomColor), lerp));
+                yield return null;
+            }
+        }
+
+        private void Swap(ref string a, ref string b)
+        {
+            string temp = a;
+            a = b;
+            b = temp;
         }
     }
 }
