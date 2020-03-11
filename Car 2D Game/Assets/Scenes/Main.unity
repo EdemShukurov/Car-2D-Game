@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 37758531}
   - component: {fileID: 37758533}
   m_Layer: 0
-  m_Name: Wallet
+  m_Name: CarTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -574,6 +574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1050117790}
+  carRigidBody: {fileID: 1554313226}
 --- !u!4 &37758532
 Transform:
   m_ObjectHideFlags: 0
@@ -2420,7 +2421,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 326465527}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 600, y: 0, z: 0}
+  m_LocalPosition: {x: 1200, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 927821056}
@@ -8013,7 +8014,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677160219}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalPosition: {x: 1260, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -10005,10 +10006,11 @@ GameObject:
   m_Component:
   - component: {fileID: 927821056}
   - component: {fileID: 927821057}
+  - component: {fileID: 927821058}
   m_Layer: 0
   m_Name: Flag
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -10020,7 +10022,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927821055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 56.6, y: 22.58, z: 0}
+  m_LocalPosition: {x: 77.96, y: 22.58, z: 0}
   m_LocalScale: {x: 1, y: 50, z: 1}
   m_Children: []
   m_Father: {fileID: 326465528}
@@ -10052,6 +10054,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &927821058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927821055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d861fd83d0d52aa45a33bd062154ec93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &939728247
 GameObject:
   m_ObjectHideFlags: 0
@@ -11680,10 +11694,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1136975894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 598eca5f8afd4ee409010f547f5c84af, type: 3}
+  m_Script: {fileID: 11500000, guid: ee2a53d619d0ff24d9d8489d042fd5ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 519420031}
 --- !u!4 &1136975896
 Transform:
   m_ObjectHideFlags: 0
@@ -11692,7 +11705,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136975894}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 93.70046, y: -0.48430562, z: -25.65625}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -15691,7 +15704,8 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7564331004836932159, guid: 09b6949ed6d0dbb48bd82af21dd7ad85, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 09b6949ed6d0dbb48bd82af21dd7ad85, type: 3}
 --- !u!1 &1641204634
 GameObject:
