@@ -1,21 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.U2D;
-using System;
 using System.Collections.Generic;
+using Assets.Scripts.RoadGenerator;
+using System.Runtime.CompilerServices;
 
 public class SpriteShapeDisplayer : MonoBehaviour
 {
-    public Transform carPosition;
-
-   // public List<PrefabRule> PrefabRules;
-
-   // public PrefabManager prefabManager;
-
-    private LayerMask _mask;
-    private static float offset = 200f;
-
-    public SpriteShapePool SpriteShapePool { get; set; }
+    public GroundPool GroundPool { get; set; }
 
     private void Awake()
     {
@@ -24,35 +14,67 @@ public class SpriteShapeDisplayer : MonoBehaviour
 
     public void Setup()
     {
-        _mask = LayerMask.GetMask("Ground");
+        GroundPool = GroundPool.GetInstance();
 
-        SpriteShapePool = new SpriteShapePool();
+        const int countOfGround = 3;
+        int countOfChilds = transform.childCount;
+        int index = Random.Range(0, countOfChilds);
+
+        List<int> list = new List<int>();
         
-        for (int i = 0; i < transform.childCount; i++)
+        list.Add(index);
+
+        do
         {
-            SpriteShapePool.SpriteShapeControllers.Add(transform.GetChild(i));
+            index = Random.Range(0, countOfChilds);
+
+            if (list.Contains(index) == false)
+                list.Add(index);
+        }
+        while (list.Count < countOfGround);
+
+
+        for (int i = 0; i < list.Count; i++)
+        {
+           GroundPool.AddLast(transform.GetChild(list[i]));
         }
 
-        //prefabManager = new PrefabManager(SpriteShapePool, PrefabRules);
+        DisplayTheFirstGround();
     }
 
-    public void SetActiveSpriteShape(Transform spriteShapeAction)
+    private void DisplayTheFirstGround() => ShowGround(GroundPool.GetFirst());
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void ShowGround(Transform ground)
     {
-        SpriteShapePool.SetActiveElement(spriteShapeAction);
-        Display();
+        if(ground != null)
+            ground.gameObject.SetActive(true);
     }
 
-    private void Display()
+
+    public void Display(Transform current, bool next = true)
     {
-        var previousSpriteShape = SpriteShapePool.GetPreviousElementFromActiveElemenet();
-        var nextSpriteShape = SpriteShapePool.GetNextElementFromActiveElemenet();     
-        var activeSpriteShape = SpriteShapePool.GetActiveElement();
-     
-        
-        //PrefabPool.
-        nextSpriteShape.position = new Vector3(activeSpriteShape.position.x + offset, nextSpriteShape.position.y, 0f);
+        var nextGround = GroundPool.GetNextFromCurrent(current);
+        var previousGround = GroundPool.GetPreviousFromCurrent(current);
 
-        previousSpriteShape.position = new Vector3(activeSpriteShape.position.x - offset, nextSpriteShape.position.y, 0f);
+        if (next == true)
+        {
+            ShowGround(nextGround);
+            HideGround(previousGround);
+        }
+        else
+        {
+            HideGround(nextGround);
+            ShowGround(previousGround);
+        }
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void HideGround(Transform ground)
+    {
+        if (ground != null)
+            ground.gameObject.SetActive(false);
+    }
 }
+

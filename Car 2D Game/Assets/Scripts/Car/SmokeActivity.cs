@@ -1,24 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SmokeActivity : MonoBehaviour
 {
     [SerializeField] private CarBaseMovement _carBaseMovement;
     [SerializeField] private ParticleSystem _frontWheelSmoke;
     [SerializeField] private ParticleSystem _backWheelSmoke;
-
+    
     private void OnEnable()
     {
-        _carBaseMovement.OnSmokeSet += SetSmoke;
+        _carBaseMovement.OnSmokeSet += DisplaySmoke;
     }
 
     private void OnDisable()
     {
-        _carBaseMovement.OnSmokeSet -= SetSmoke;
+        _carBaseMovement.OnSmokeSet -= DisplaySmoke;
     }
 
-    public void SetSmoke(bool isRight)
+    public void DisplaySmoke(bool isRight)
     {
         if (_carBaseMovement == null) return;
 

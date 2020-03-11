@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Runtime.CompilerServices;
+using UnityEngine;
 
 /// <summary>
 /// Drag a Rigidbody2D by selecting one of its colliders by pressing the mouse/touch down.
@@ -9,6 +11,13 @@
 [RequireComponent(typeof(Rigidbody2D))]
 public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 {
+    [Header("Wheels")]
+    [SerializeField] private Rigidbody2D _frontWheelRigidBody2D;
+    [SerializeField] private Rigidbody2D _backWheelRigidBody2D;
+
+    [Header("SmokeActivity")]
+    [SerializeField] private SmokeActivity _smokeActivity;
+
     [Header("TargetJoint2D properties")]
 
     [Range(0.0f, 100.0f)]
@@ -26,9 +35,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     private static IPivotRotation _pivotRotation;
 
-    private float _originalCarMass;
+    private float _originalCarMass, _originalWheelMass;
 
-    private bool _useDrag;
+    public bool useDrag;
 
     private void OnEnable()
     {
@@ -42,7 +51,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     {
         _pivotRotation = GetComponent<CarRotation>();
         _rigidBody2D = GetComponent<Rigidbody2D>();
+       
         _originalCarMass = _rigidBody2D.mass;
+        _originalWheelMass = _backWheelRigidBody2D.mass;
     }
 
 
@@ -81,7 +92,10 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         _pivotRotation.AlignAngleCarViaPivot();
 
         // set flag
-        _useDrag = true;
+        useDrag = true;
+
+        // off smoke while dragging
+        _smokeActivity.enabled = false;
 
         AddTargetJoint2D();
         ChangeRigidBody2DProperties();
@@ -108,7 +122,13 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     private void ChangeRigidBody2DProperties()
     {
         _rigidBody2D.freezeRotation = true;
-        _rigidBody2D.mass = 10f;        
+        _rigidBody2D.mass = 10f;
+
+        if (_frontWheelRigidBody2D != null)
+            _frontWheelRigidBody2D.mass = 40f;
+
+        if (_backWheelRigidBody2D != null)
+            _backWheelRigidBody2D.mass = 10f;
     }
 
     /// <summary>
@@ -122,7 +142,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     protected override void Update()
     {
         //Debug.Log("overr");
-        if (_useDrag == true)
+        if (useDrag == true)
         {
             if (Input.GetMouseButtonUp(0))
             {
@@ -130,12 +150,18 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
                 return;
             }
 
+            ClampVelocity();
             GetTouchPosition();
             AddTargetToTargetJoint2D();
         }
         // car base movement
         else
             base.Update();
+    }
+
+    private void ClampVelocity()
+    {
+        _rigidBody2D.velocity = new Vector2( Mathf.Clamp(_rigidBody2D.velocity.x, -20f, 20f), Mathf.Clamp(_rigidBody2D.velocity.y, -10f, 10f));
     }
 
     /// <summary>
@@ -157,14 +183,17 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     private void OnTouchUp(Touch eventData)
     {
-        if (_useDrag == true)
+        if (useDrag == true)
             EndVehicleDragging();
     }
 
     public void EndVehicleDragging()
     {
         //set flag
-        _useDrag = false;
+        useDrag = false;
+
+        // on smoke
+        _smokeActivity.enabled = true;
 
         DestroyTargetJoint2D();
         RefreshRigidBody2DProperties();
@@ -174,16 +203,20 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// <summary>
     /// Return car properties
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void RefreshRigidBody2DProperties()
     {
         _rigidBody2D.freezeRotation = false;
         _rigidBody2D.mass = _originalCarMass;
+
+        _backWheelRigidBody2D.mass = _frontWheelRigidBody2D.mass = _originalWheelMass;
     }
 
 
     /// <summary>
     /// Remove TargetJoint2D
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DestroyTargetJoint2D()
     {
         Destroy(_targetJoint2D);

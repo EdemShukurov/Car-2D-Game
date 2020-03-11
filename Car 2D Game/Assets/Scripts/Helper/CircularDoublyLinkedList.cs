@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class CircularDoublyLinkedList<T> : IEnumerable<T>
 {
     private DoublyNode<T> head; // the first element
+    private DoublyNode<T> tail; // the last element
+
     private int count;
 
     public int Count { get { return count; } }
@@ -37,9 +39,13 @@ public class CircularDoublyLinkedList<T> : IEnumerable<T>
         do
         {
             if (current.Data.Equals(data))
+            {
                 current.IsActive = true;
+            }
             else
+            {
                 current.IsActive = false;
+            }
 
             current = current.Next;
         }

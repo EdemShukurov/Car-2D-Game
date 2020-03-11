@@ -9,6 +9,8 @@ TagManager:
   - Cloud
   - Ground
   - Background
+  - Coin
+  - Car Trigger
   layers:
   - Default
   - TransparentFX

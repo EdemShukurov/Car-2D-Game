@@ -5,6 +5,8 @@ using System.Linq;
 
 public class Capture : MonoBehaviour
 {
+    public RectTransform panel;
+
     // Store more screenshots...
     private int _screenShotCount = 0;
 
@@ -36,8 +38,12 @@ public class Capture : MonoBehaviour
 
     private void Start()
     {
-        _rect = new Rect(Screen.width / 2f - 250f, Screen.height / 2f - 150f, 500f, 300f);
-        _initRectPosition = new Vector2(_rect.x, _rect.y - 800f);
+        _initRectPosition = panel.anchoredPosition;
+
+        float width = Screen.width / 1.5f;
+        float height = Screen.height / 1.5f;
+
+        _rect = new Rect(Screen.width / 2f - width/2, Screen.height / 2f - height/2f, width, height);
     }
 
     public void MakeScreenShot()
@@ -53,35 +59,35 @@ public class Capture : MonoBehaviour
         _isShotTaken = true;
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            MakeScreenShot();
-        }
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        MakeScreenShot();
+    //    }
 
-        //if (false /*Close_Screen.HitTest(Input.GetTouch(0).position)*/)
-        //{
-        //    if (Input.GetTouch(0).phase == TouchPhase.Began)
-        //    {
-        //        Screenshot = null;
-        //        Shot_Taken = true;
-        //    }
-        //}
+    //    //if (false /*Close_Screen.HitTest(Input.GetTouch(0).position)*/)
+    //    //{
+    //    //    if (Input.GetTouch(0).phase == TouchPhase.Began)
+    //    //    {
+    //    //        Screenshot = null;
+    //    //        Shot_Taken = true;
+    //    //    }
+    //    //}
 
-        //if (false /*Shot_Taken == true*/)
-        //{
-        //    Origin_Path = System.IO.Path.Combine(Application.persistentDataPath, Screen_Shot_File_Name);
+    //    //if (false /*Shot_Taken == true*/)
+    //    //{
+    //    //    Origin_Path = System.IO.Path.Combine(Application.persistentDataPath, Screen_Shot_File_Name);
 
-        //    // This is the path of my folder.
-        //    File_Path = "/mnt/sdcard/DCIM/Inde/" + Screen_Shot_File_Name;
-        //    if (System.IO.File.Exists(Origin_Path))
-        //    {
-        //        System.IO.File.Move(Origin_Path, File_Path);
-        //        Shot_Taken = false;
-        //    }
-        //}
-    }
+    //    //    // This is the path of my folder.
+    //    //    File_Path = "/mnt/sdcard/DCIM/Inde/" + Screen_Shot_File_Name;
+    //    //    if (System.IO.File.Exists(Origin_Path))
+    //    //    {
+    //    //        System.IO.File.Move(Origin_Path, File_Path);
+    //    //        Shot_Taken = false;
+    //    //    }
+    //    //}
+    //}
 
     private void OnGUI()
     {
@@ -104,6 +110,7 @@ public class Capture : MonoBehaviour
 
         if (_screenshot != null)
         {
+            SwitchPanel(null);
             //GUI.DrawTexture(rect, _screenshot, ScaleMode.ScaleToFit, true, 200f, Color.red, 50f, 30f);
             GUI.DrawTexture(_rect, _screenshot);
             _isShotTaken = false;
@@ -112,8 +119,16 @@ public class Capture : MonoBehaviour
         }
     }
 
+    public void SwitchPanel(Vector2? targetPosition)
+    {
+        Vector2 _targetPosition = targetPosition ?? Vector2.zero;
+        panel.anchoredPosition = _targetPosition;
+    }
+
     private void DescendRect()
     {
+        SwitchPanel(_initRectPosition);
+
         _screenshot = null;
 
         DirectoryInfo di = new DirectoryInfo(@"C:\Users\1\Documents\GitHub\Car-2D-Game\Car 2D Game");
