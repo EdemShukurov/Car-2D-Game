@@ -6,7 +6,7 @@ public class Coin : MonoBehaviour
     {
         if (other.TryGetComponent<Wallet>(out Wallet wallet))
         {
-            wallet?.AddCoin();
+            wallet.AddCoin();
             Destroy(gameObject);
         }
     }

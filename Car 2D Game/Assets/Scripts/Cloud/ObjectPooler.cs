@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.ComponentModel;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -78,7 +79,7 @@ public class ObjectPooler : MonoBehaviour
     /// <param name="position">where prefab should be placed</param>
     /// <param name="rotation">prefab's rotation</param>
     /// <returns></returns>
-    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation, Transform parent = null)
+    public GameObject SpawnFromPool(string tag, Vector2 position, Quaternion rotation, [DefaultValue("null")] Transform parent = null)
     {
         if (poolDictionary.ContainsKey(tag) == false)
         {
