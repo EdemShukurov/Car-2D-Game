@@ -76,6 +76,7 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Metallic: 0
+    - _MidPoint: 0.578
     - _Middle: 1
     - _OcclusionStrength: 1
     - _QueueOffset: 0
@@ -89,11 +90,11 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-    - _BottomColor: {r: 0.7542838, g: 0.7346773, b: 0.7972771, a: 1}
+    - _BottomColor: {r: 0.023584902, g: 0.19862594, b: 1, a: 1}
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _ColorBot: {r: 1, g: 1, b: 1, a: 1}
     - _ColorMid: {r: 0.16015486, g: 0.5754717, b: 0.40960464, a: 1}
     - _ColorTop: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _TopColor: {r: 0.26939228, g: 0.09041538, b: 0.55094343, a: 1}
+    - _TopColor: {r: 0.4001906, g: 0.111294046, b: 0.5754717, a: 1}

@@ -57,6 +57,7 @@ public class Capture : MonoBehaviour
         _path = System.IO.Path.GetFullPath(_screenShot_FileName);
 
         _isShotTaken = true;
+
     }
 
     //private void Update()
@@ -115,7 +116,8 @@ public class Capture : MonoBehaviour
             GUI.DrawTexture(_rect, _screenshot);
             _isShotTaken = false;
 
-            Invoke("DescendRect", 1f);
+            RemoveScreensFromFolder();
+            //Invoke("RemoveScreensFromFolder", 1f);
         }
     }
 
@@ -125,11 +127,11 @@ public class Capture : MonoBehaviour
         panel.anchoredPosition = _targetPosition;
     }
 
-    private void DescendRect()
+    private void RemoveScreensFromFolder()
     {
-        SwitchPanel(_initRectPosition);
+        //SwitchPanel(_initRectPosition);
 
-        _screenshot = null;
+       // _screenshot = null;
 
         DirectoryInfo di = new DirectoryInfo(@"C:\Users\1\Documents\GitHub\Car-2D-Game\Car 2D Game");
         FileInfo[] files = di.GetFiles("*.png")

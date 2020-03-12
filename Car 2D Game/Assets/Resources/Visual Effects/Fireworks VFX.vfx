@@ -2555,13 +2555,13 @@ VisualEffectResource:
         - m_ExpressionIndex: 10
           m_Value: 0
         - m_ExpressionIndex: 11
-          m_Value: 20
+          m_Value: 15
         - m_ExpressionIndex: 12
           m_Value: 1
         - m_ExpressionIndex: 13
           m_Value: 0
         - m_ExpressionIndex: 14
-          m_Value: 5
+          m_Value: 0
         - m_ExpressionIndex: 15
           m_Value: 1
         - m_ExpressionIndex: 16
@@ -4263,7 +4263,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Line, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"start":{"x":5.0,"y":0.0,"z":0.0},"end":{"x":20.0,"y":0.0,"z":0.0}}'
+      m_SerializableObject: '{"start":{"x":0.0,"y":0.0,"z":0.0},"end":{"x":15.0,"y":0.0,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: line

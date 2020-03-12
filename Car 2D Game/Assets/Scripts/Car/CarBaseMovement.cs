@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Assets.Scripts.Game_Behaviour;
+using System.Runtime.CompilerServices;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(WheelJoint2D))]
 public class CarBaseMovement : MonoBehaviour
@@ -45,6 +47,8 @@ public class CarBaseMovement : MonoBehaviour
         //Debug.Log("virt");
         _carRotation.LimitAngleCar();
 
+        LimitCoordinateY();
+
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
         {
             _movementInput = GetTouch(Input.mousePosition.x);
@@ -54,7 +58,18 @@ public class CarBaseMovement : MonoBehaviour
             _movementInput = 0f;
         }
 
+        //if(Input.GetKeyDown(KeyCode.P))
+        //{
+        //    ScreenShotHandler.Static_TakeScreenShot(Screen.width, Screen.height);
+        //}
+
         DetermineAction();
+    }
+
+    private void LimitCoordinateY()
+    {
+        if (transform.position.y > 35f)
+            transform.position = new Vector3(transform.position.x, 35f, transform.position.z);
     }
 
     private void DetermineAction()
@@ -92,10 +107,12 @@ public class CarBaseMovement : MonoBehaviour
         Input.GetKey(KeyCode.Space);
 
 
+
     /// <summary>
     /// Get touch/mouseclick position to determine speed
     /// /// </summary>
     /// <param name="touchPosition">touch/mouseclick position</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected float GetTouch(float touchPosition) => _movementInput = (touchPosition - _centerScreenX) / _centerScreenX;
 
     /// <summary>
@@ -121,9 +138,8 @@ public class CarBaseMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Use Coroutine in order to rotate pivot smoothly
+    /// Use Coroutine in order to brake smoothly
     /// </summary>
-    /// <param name="targetAngle"></param>
     /// <param name="time"></param>
     /// <returns></returns>
     private IEnumerator SmoothBrake(float time)

@@ -44,7 +44,7 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
     }
 
     /// <summary>
-    /// Set pivot to define wheel position and set it as a parent "Car" GameObject (in scene: Car -> CarBase)
+    /// Set pivot to define  wheel position and set it as a parent "Car" GameObject (in scene: Car -> CarBase)
     /// </summary>
     /// <param name="wheelPosition">wheel position</param>
     private void SetPivot(Vector3 wheelPosition)
