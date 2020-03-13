@@ -7,8 +7,8 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
     public GameObject pivot;
 
     [Header("Wheels")]
-    public WheelCollision _frontWheelCollision;
-    public WheelCollision _backWheelCollision;
+    public WheelCollision _frontWheelCollisionRotation;
+    public WheelCollision _backWheelCollisionRotation;
 
     [SerializeField] private float _speedChangeAngle = 0.8f;
 
@@ -29,12 +29,12 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
 
         if (transform.eulerAngles.z > 0f)
         {
-            SetPivot(_backWheelCollision.transform.position);
+            SetPivot(_backWheelCollisionRotation.transform.position);
             targetAngle = Quaternion.Euler(0f, 0f, -transform.eulerAngles.z);
         }
         else
         {
-            SetPivot(_frontWheelCollision.transform.position);
+            SetPivot(_frontWheelCollisionRotation.transform.position);
             targetAngle = Quaternion.Euler(0f, 0f, transform.eulerAngles.z);
         }
 
@@ -87,7 +87,7 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
     /// </summary>
     public void LimitAngleCar()
     {
-        if (_frontWheelCollision.isGrounded == false || _backWheelCollision.isGrounded == false)
+        if (_frontWheelCollisionRotation.isGrounded == false || _backWheelCollisionRotation.isGrounded == false)
         {
             var angleCar = ClampAngleCar(transform.eulerAngles.z, _minimumZ, _maximumZ);
             transform.rotation = RotateAngleCar(angleCar);

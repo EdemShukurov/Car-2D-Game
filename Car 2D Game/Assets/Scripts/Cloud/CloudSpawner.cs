@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class CloudSpawner : MonoBehaviour
 {
@@ -17,9 +16,6 @@ public class CloudSpawner : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        //Time.timeScale = 5.8f;
-        //Time.fixedDeltaTime *= Time.timeScale;
     }
 
     #endregion

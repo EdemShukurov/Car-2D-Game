@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CarJumping : CarBaseMovement
 {
-    [Header("Wheels")]
-    public WheelCollision _frontWheelCollision;
-    public WheelCollision _backWheelCollision;
+    //[Header("Wheels")]
+    //public WheelCollision _frontWheelCollision;
+    //public WheelCollision _backWheelCollision;
 
     [SerializeField] private float _jumpForce = 1500f;
     private bool _isJumping;
@@ -32,7 +31,7 @@ public class CarJumping : CarBaseMovement
         }
 
         // Jump
-        if (_frontWheelCollision.isGrounded && _backWheelCollision.isGrounded)
+        if (_frontWheelCollisionBase.isGrounded && _backWheelCollisionBase.isGrounded)
         {
             // Jump using impulse force
             _rigidBody2D.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
@@ -41,9 +40,8 @@ public class CarJumping : CarBaseMovement
             _isJumping = true;
 
         }
-
         // Landed
-        else if (_isJumping && _isFalling && (_frontWheelCollision.isGrounded || _backWheelCollision.isGrounded))
+        else if (_isJumping && _isFalling && (_frontWheelCollisionBase.isGrounded || _backWheelCollisionBase.isGrounded))
         {
             // Reset jumping flags
             _isJumping = false;

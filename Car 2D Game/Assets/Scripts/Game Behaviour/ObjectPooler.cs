@@ -5,14 +5,6 @@ using System.ComponentModel;
 
 public class ObjectPooler : MonoBehaviour
 {
-    //[Serializable]
-    //public class Pool
-    //{
-    //    public string tag;
-    //    public GameObject prefab;
-    //    public int size;
-    //}
-
     [Serializable]
     public class Pool
     {
@@ -33,25 +25,6 @@ public class ObjectPooler : MonoBehaviour
     }
 
     #endregion
-
-    //private void Start()
-    //{
-    //    poolDictionary = new Dictionary<string, Queue<GameObject>>();
-
-    //    foreach (Pool pool in pools)
-    //    {
-    //        var objectPool = new Queue<GameObject>();
-
-    //        for (int i = 0; i < pool.size; i++)
-    //        {
-    //            var obj = Instantiate(pool.prefab);
-    //            obj.SetActive(false);
-    //            objectPool.Enqueue(obj);
-    //        }
-
-    //        poolDictionary.Add(pool.tag, objectPool);
-    //    }
-    //}
 
     private void Start()
     {
@@ -111,11 +84,14 @@ public class ObjectPooler : MonoBehaviour
             pooledObject.OnObjectSpawned();
         }
 
-        //poolDictionary[tag].Enqueue(objectToSpawn);
-
         return objectToSpawn;
     }
 
+    /// <summary>
+    /// Put <paramref name="objectToPull"/> with determine tag into queue
+    /// </summary>
+    /// <param name="tag">we need a special tag, that has been already determined</param>
+    /// <param name="objectToPull">object</param>
     public void EnqueeObject(string tag, GameObject objectToPull)
     {
         if (poolDictionary.ContainsKey(tag) == false)
