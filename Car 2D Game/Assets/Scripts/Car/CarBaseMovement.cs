@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using Assets.Scripts.Game_Behaviour;
 using System.Runtime.CompilerServices;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(WheelJoint2D))]
 public class CarBaseMovement : MonoBehaviour
 {
+    [Header("Wheels")]
+    public WheelCollision _frontWheelCollisionBase;
+    public WheelCollision _backWheelCollisionBase;
+
     public const float GRAVITY = 9.81f;
 
     public event Action<bool> OnSmokeSet;
@@ -44,7 +47,6 @@ public class CarBaseMovement : MonoBehaviour
 
     protected virtual void Update()
     {
-        //Debug.Log("virt");
         _carRotation.LimitAngleCar();
 
         LimitCoordinateY();
@@ -57,11 +59,6 @@ public class CarBaseMovement : MonoBehaviour
         {
             _movementInput = 0f;
         }
-
-        //if(Input.GetKeyDown(KeyCode.P))
-        //{
-        //    ScreenShotHandler.Static_TakeScreenShot(Screen.width, Screen.height);
-        //}
 
         DetermineAction();
     }
@@ -102,11 +99,13 @@ public class CarBaseMovement : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     private bool UseBrake() => 
-        (_movementInput > 0f && _speed == Speed.Decrease) || 
-        (_movementInput < 0f && _speed == Speed.Increase) || 
-        Input.GetKey(KeyCode.Space);
-
-
+        (_frontWheelCollisionBase.isGrounded == true && _backWheelCollisionBase.isGrounded == true) 
+            &&
+        (
+            (_movementInput > 0f && _speed == Speed.Decrease) || 
+            (_movementInput < 0f && _speed == Speed.Increase) || 
+            Input.GetKey(KeyCode.Space)
+        );
 
     /// <summary>
     /// Get touch/mouseclick position to determine speed
@@ -153,5 +152,5 @@ public class CarBaseMovement : MonoBehaviour
         }
     }
 
-    private float GetPhysicInfluenceValue() => GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
+    //private float GetPhysicInfluenceValue() => GRAVITY * Mathf.Sin((transform.eulerAngles.z * Mathf.PI) / 180f) * 80f;
 }
