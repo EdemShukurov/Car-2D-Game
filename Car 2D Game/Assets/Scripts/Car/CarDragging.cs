@@ -1,12 +1,11 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using UnityEngine;
 
 /// <summary>
 /// Drag a Rigidbody2D by selecting one of its colliders by pressing the mouse/touch down.
-/// When the collider is selected, add a TargetJoint2D.
+/// When the collider is selected, TargetJoint2D is enabled.
 /// While the mouse/finger is moving, continually set the target to the mouse/finger position.
-/// When the mouse/touch is released, the TargetJoint2D is deleted.`
+/// When the mouse/touch is released, the TargetJoint2D is unenabled.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
@@ -51,11 +50,22 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     {
         _pivotRotation = GetComponent<CarRotation>();
         _rigidBody2D = GetComponent<Rigidbody2D>();
-       
+
+        _targetJoint2D = GetComponent<TargetJoint2D>();
+
+        SetTargetJoint2DProperty();
+
         _originalCarMass = _rigidBody2D.mass;
         _originalWheelMass = _backWheelRigidBody2D.mass;
     }
 
+    private void SetTargetJoint2DProperty()
+    {
+        _targetJoint2D.dampingRatio = _damping;
+        _targetJoint2D.frequency = _frequency;
+        _targetJoint2D.maxForce = _maxForce;
+        _targetJoint2D.enabled = false;
+    }
 
     #region OnTouchDown and OnMouseDown
 
@@ -97,22 +107,18 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         // off smoke while dragging
         _smokeActivity.enabled = false;
 
-        AddTargetJoint2D();
+        EnableTargetJoint2D();
+        AddAnchorToTargetJoint2D();
         ChangeRigidBody2DProperties();
     }
 
     /// <summary>
-    /// Add TargetJoint2D to Car
+    /// Enable TargetJoint2D
     /// </summary>
-    private void AddTargetJoint2D()
+    private void EnableTargetJoint2D()
     {
-        // Add a target joint to the Rigidbody2D GameObject.
-        _targetJoint2D = _rigidBody2D.gameObject.AddComponent<TargetJoint2D>();
-        _targetJoint2D.dampingRatio = _damping;
-        _targetJoint2D.frequency = _frequency;
-        _targetJoint2D.maxForce = _maxForce;
-
-        AddAnchorToTargetJoint2D();
+        //_targetJoint2D = _rigidBody2D.gameObject.AddComponent<TargetJoint2D>();
+        _targetJoint2D.enabled = true;
 
     }
 
@@ -195,7 +201,7 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
         // on smoke
         _smokeActivity.enabled = true;
 
-        DestroyTargetJoint2D();
+        DisableTargetJoint2D();
         RefreshRigidBody2DProperties();
         _pivotRotation.DetachPivot();
     }
@@ -214,13 +220,14 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
 
     /// <summary>
-    /// Remove TargetJoint2D
+    /// Disable TargetJoint2D
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void DestroyTargetJoint2D()
+    private void DisableTargetJoint2D()
     {
-        Destroy(_targetJoint2D);
-        _targetJoint2D = null;
+        _targetJoint2D.enabled = false;
+        //Destroy(_targetJoint2D);
+        //_targetJoint2D = null;
     }
 
     private void OnDisable()
