@@ -46,6 +46,9 @@ public class Capture : MonoBehaviour
         _rect = new Rect(Screen.width / 2f - width/2, Screen.height / 2f - height/2f, width, height);
     }
 
+    /// <summary>
+    /// Make screenshot: it will appear in Car-2D-Game folder
+    /// </summary>
     public void MakeScreenShot()
     {
         _screenShotCount++;
@@ -54,41 +57,11 @@ public class Capture : MonoBehaviour
         _screenShot_FileName = "Screenshot__" + _screenShotCount + System.DateTime.Now.ToString("__yyyy-MM-dd") + ".png";
         ScreenCapture.CaptureScreenshot(_screenShot_FileName);
 
-        _path = System.IO.Path.GetFullPath(_screenShot_FileName);
+        _path = Path.GetFullPath(_screenShot_FileName);
 
         _isShotTaken = true;
 
-    }
-
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.P))
-    //    {
-    //        MakeScreenShot();
-    //    }
-
-    //    //if (false /*Close_Screen.HitTest(Input.GetTouch(0).position)*/)
-    //    //{
-    //    //    if (Input.GetTouch(0).phase == TouchPhase.Began)
-    //    //    {
-    //    //        Screenshot = null;
-    //    //        Shot_Taken = true;
-    //    //    }
-    //    //}
-
-    //    //if (false /*Shot_Taken == true*/)
-    //    //{
-    //    //    Origin_Path = System.IO.Path.Combine(Application.persistentDataPath, Screen_Shot_File_Name);
-
-    //    //    // This is the path of my folder.
-    //    //    File_Path = "/mnt/sdcard/DCIM/Inde/" + Screen_Shot_File_Name;
-    //    //    if (System.IO.File.Exists(Origin_Path))
-    //    //    {
-    //    //        System.IO.File.Move(Origin_Path, File_Path);
-    //    //        Shot_Taken = false;
-    //    //    }
-    //    //}
-    //}
+    }    
 
     private void OnGUI()
     {
@@ -96,7 +69,7 @@ public class Capture : MonoBehaviour
         {
             try
             {
-                _bytesFile = System.IO.File.ReadAllBytes(_path);
+                _bytesFile = File.ReadAllBytes(_path);
                 _screenshot = new Texture2D(0, 0, TextureFormat.DXT1/*ATF_RGB_DXT1*/, false);
                 _screenshot.LoadImage(_bytesFile);
 
@@ -105,19 +78,17 @@ public class Capture : MonoBehaviour
             {
                 Debug.LogWarning(e);
             }
-            //  Path_Name = System.IO.Path.Combine(Application.persistentDataPath, Screen_Shot_File_Name);
         }
 
 
         if (_screenshot != null)
         {
             SwitchPanel(null);
-            //GUI.DrawTexture(rect, _screenshot, ScaleMode.ScaleToFit, true, 200f, Color.red, 50f, 30f);
+
             GUI.DrawTexture(_rect, _screenshot);
             _isShotTaken = false;
 
             RemoveScreensFromFolder();
-            //Invoke("RemoveScreensFromFolder", 1f);
         }
     }
 
@@ -127,12 +98,11 @@ public class Capture : MonoBehaviour
         panel.anchoredPosition = _targetPosition;
     }
 
+    /// <summary>
+    /// Remove all files with .png extensions
+    /// </summary>
     private void RemoveScreensFromFolder()
     {
-        //SwitchPanel(_initRectPosition);
-
-       // _screenshot = null;
-
         DirectoryInfo di = new DirectoryInfo(@"C:\Users\1\Documents\GitHub\Car-2D-Game\Car 2D Game");
         FileInfo[] files = di.GetFiles("*.png")
                              .Where(p => p.Extension == ".png").ToArray();
