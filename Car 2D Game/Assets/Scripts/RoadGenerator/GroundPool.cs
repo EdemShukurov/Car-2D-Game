@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Assets.Scripts.RoadGenerator
 {
     public class GroundPool
     {
-        LinkedList<Transform> transforms = new LinkedList<Transform>();
+        Dictionary<float, Transform> grounds = new Dictionary<float, Transform>();
 
-        private static float _offsetXPosition = 200f;
-        private static float _offsetXPositionIncrement = 200f;
+        private static float _offsetXPosition = 200f, _offsetXPositionIncrement = 200f;
+
+        #region Singleton
 
         private static GroundPool instance;
 
@@ -24,49 +24,47 @@ namespace Assets.Scripts.RoadGenerator
             return instance;
         }
 
-        public void AddLast(Transform transform, bool setOffset = true)
-        {
-            if(setOffset)
-            {
-                // set offset for every ground
-                transform.position = new Vector3(_offsetXPosition, 0f, 0f);
+        #endregion
 
-                // increase offset
-                _offsetXPosition += _offsetXPositionIncrement;
+        public void AddLast(Transform transform)
+        {
+            grounds.Add(_offsetXPosition, transform);
+
+            _offsetXPosition += _offsetXPositionIncrement;
+        }
+
+        public Transform GetFirst()
+        {
+            var ground = grounds[_offsetXPositionIncrement];
+            ground.position = new Vector3(_offsetXPositionIncrement, 0f, 0f);
+
+            return ground;
+        }
+
+        public Transform GetNextFromCurrent(float keyPosition)
+        {
+            keyPosition += _offsetXPositionIncrement;
+
+            return GetElementByKey(keyPosition);
+        }
+
+        private Transform GetElementByKey(float key)
+        {
+            if (grounds.ContainsKey(key))
+            {
+                var result = grounds[key];
+                result.position = new Vector3(key, 0f, 0f);
+                return result;
             }
 
-            // add to linkedlist
-            transforms.AddLast(transform);
+            return null;
         }
 
-        public Transform GetFirst() => transforms.First.Value;
-        
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public LinkedListNode<Transform> GetCurrentNode(Transform current) => transforms.Find(current);
-
-
-        public Transform GetNextFromCurrent(Transform current)
+        public Transform GetPreviousFromCurrent(float keyPosition)
         {
-            // Find the current node
-            var currentNode = GetCurrentNode(current);
+            keyPosition -= _offsetXPositionIncrement;
 
-            if (currentNode.Next == null)
-                return null;
-
-            return currentNode.Next.Value;
+            return GetElementByKey(keyPosition);
         }
-
-        public Transform GetPreviousFromCurrent(Transform current)
-        {
-            // Find the current node
-            var currentNode = GetCurrentNode(current);
-
-            if (currentNode.Previous == null)
-                return null;
-
-            return currentNode.Previous.Value;
-        }           
-            
     }
 }
