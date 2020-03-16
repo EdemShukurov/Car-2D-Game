@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 public class ObjectPooler : MonoBehaviour
 {
@@ -30,13 +31,13 @@ public class ObjectPooler : MonoBehaviour
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
-        foreach (Pool pool in pools)
+        foreach (var (pool, objectPool) in from Pool pool in pools
+                                           let objectPool = new Queue<GameObject>()
+                                           select (pool, objectPool))
         {
-            var objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.prefabs.Count; i++)
+            foreach (GameObject v in pool.prefabs)
             {
-                var obj = Instantiate(pool.prefabs[i]);
+                var obj = Instantiate(v);
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }

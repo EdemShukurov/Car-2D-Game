@@ -8,15 +8,13 @@ namespace Assets.Scripts.Game_Behaviour
         public Material gradient;
         
         public Color dayTopColor = Color.white;
-        public  Color dayBottomColor = Color.white;
+        public Color dayBottomColor = Color.white;
 
         public Color nightTopColor = Color.white;
         public Color nightBottomColor = Color.white;
 
-
         private const string TAG = "Car";
         private Tweener _tweener;
-
 
         public void DayToNight()
         {

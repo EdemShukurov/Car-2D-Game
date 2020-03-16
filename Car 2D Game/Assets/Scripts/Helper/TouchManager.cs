@@ -32,17 +32,20 @@ public class TouchManager : MonoBehaviour
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
+            switch (touch.phase)
             {
-                OnTouchDown?.Invoke(touch);
-            }
-            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-            {
-                OnTouchUp?.Invoke(touch);
-            }
-            else
-            {
-                OnTouchStationaryOrMoved?.Invoke(touch);
+                case TouchPhase.Began:
+                    OnTouchDown?.Invoke(touch);
+                    break;
+
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    OnTouchUp?.Invoke(touch);
+                    break;
+
+                default:
+                    OnTouchStationaryOrMoved?.Invoke(touch);
+                    break;
             }
         }
     }

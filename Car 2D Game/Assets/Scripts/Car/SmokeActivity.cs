@@ -5,16 +5,10 @@ public class SmokeActivity : MonoBehaviour
     [SerializeField] private CarBaseMovement _carBaseMovement;
     [SerializeField] private ParticleSystem _frontWheelSmoke;
     [SerializeField] private ParticleSystem _backWheelSmoke;
-    
-    private void OnEnable()
-    {
-        _carBaseMovement.OnSmokeSet += DisplaySmoke;
-    }
 
-    private void OnDisable()
-    {
-        _carBaseMovement.OnSmokeSet -= DisplaySmoke;
-    }
+    private void OnEnable() => _carBaseMovement.OnSmokeSet += DisplaySmoke;
+
+    private void OnDisable() => _carBaseMovement.OnSmokeSet -= DisplaySmoke;
 
     public void DisplaySmoke(bool isRight)
     {

@@ -10,11 +10,11 @@ public class CarRotation : MonoBehaviour, IPivotRotation, IAngleVehicleRotation
     public WheelCollision _frontWheelCollisionRotation;
     public WheelCollision _backWheelCollisionRotation;
 
-    [SerializeField] private float _speedChangeAngle = 0.8f;
+    [SerializeField] private readonly float _speedChangeAngle = 0.8f;
 
     // fields for angle limit
-    private float _minimumZ = -20F;
-    private float _maximumZ = 20F;
+    private readonly float _minimumZ = -20F;
+    private readonly float _maximumZ = 20F;
 
 
     /// <summary>

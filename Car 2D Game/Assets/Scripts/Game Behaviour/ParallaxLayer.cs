@@ -11,7 +11,7 @@ public class ParallaxLayer : MonoBehaviour
     private float _temp;
     private float _offsetY;
 
-    void Start()
+    private void Start()
     {
         _startPos = transform.position.x;
         _length = GetComponent<SpriteRenderer>().bounds.size.x;

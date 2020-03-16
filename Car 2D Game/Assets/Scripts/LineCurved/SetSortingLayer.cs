@@ -17,6 +17,7 @@ public class SetSortingLayer : MonoBehaviour
     {
         if (MyRenderer == null)
             MyRenderer = this.GetComponent<Renderer>();
+
         MyRenderer.sortingLayerName = MySortingLayer;
         MyRenderer.sortingOrder = MySortingOrderInLayer;
     }

@@ -167,7 +167,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
 
     private void ClampVelocity()
     {
-        _rigidBody2D.velocity = new Vector2( Mathf.Clamp(_rigidBody2D.velocity.x, -20f, 20f), Mathf.Clamp(_rigidBody2D.velocity.y, -10f, 10f));
+        _rigidBody2D.velocity = new Vector2(
+            Mathf.Clamp(_rigidBody2D.velocity.x, -20f, 20f),
+            Mathf.Clamp(_rigidBody2D.velocity.y, -10f, 10f));
     }
 
     /// <summary>
@@ -175,10 +177,9 @@ public class CarDragging : CarBaseMovement, IVehicleDraggingViaTargetJoint2D
     /// </summary>
     private void GetTouchPosition()
     {
-        if (Input.touchCount > 0)
-            _currentWorldPosition = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
-        else
-            _currentWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _currentWorldPosition = Input.touchCount > 0
+            ? (Vector2)Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)
+            : (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     public void AddTargetToTargetJoint2D()

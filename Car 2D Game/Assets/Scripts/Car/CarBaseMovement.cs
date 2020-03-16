@@ -71,7 +71,7 @@ public class CarBaseMovement : MonoBehaviour
 
     private void DetermineAction()
     {
-        if (UseBrake())
+        if (UseBrake)
         {
             Brake();
             _speed = Speed.Brake;
@@ -98,12 +98,12 @@ public class CarBaseMovement : MonoBehaviour
     /// if we suddenly changed direction, we should break
     /// </summary>
     /// <returns></returns>
-    private bool UseBrake() => 
-        (_frontWheelCollisionBase.isGrounded == true && _backWheelCollisionBase.isGrounded == true) 
+    private bool UseBrake =>
+        (_frontWheelCollisionBase.isGrounded == true && _backWheelCollisionBase.isGrounded == true)
             &&
         (
-            (_movementInput > 0f && _speed == Speed.Decrease) || 
-            (_movementInput < 0f && _speed == Speed.Increase) || 
+            (_movementInput > 0f && _speed == Speed.Decrease) ||
+            (_movementInput < 0f && _speed == Speed.Increase) ||
             Input.GetKey(KeyCode.Space)
         );
 
@@ -119,8 +119,13 @@ public class CarBaseMovement : MonoBehaviour
     /// </summary>
     private void UpdateVelocity()
     {
-        if (_speed == Speed.Decrease || _speed == Speed.Increase)
-            _rigidBody2D.drag = 0f;
+        switch (_speed)
+        {
+            case Speed.Decrease:
+            case Speed.Increase:
+                _rigidBody2D.drag = 0f;
+                break;
+        }
 
         // speed is always in this limits, Clamp is needed to avoid NaN excepion while forcing, 
         // as _movementInput may be (in unityedit mode) more 1 or less -1

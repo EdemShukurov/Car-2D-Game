@@ -6,14 +6,8 @@ public class CarSurveillance : MonoBehaviour
 
     private Vector3 offset;
 
-    private void Awake()
-    {
-        offset = transform.position - target.position;
-    }
+    private void Awake() => offset = transform.position - target.position;
 
-    private void Update()
-    {
-        transform.position = offset + target.position;
-    }
+    private void Update() => transform.position = offset + target.position;
 
 }

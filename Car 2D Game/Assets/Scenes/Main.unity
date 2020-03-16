@@ -2956,24 +2956,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &275206221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 275206218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 097b551f2844b054290f18a39bf892e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Solvers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  m_Weight: 1
 --- !u!95 &275206222
 Animator:
   serializedVersion: 3
@@ -15353,7 +15335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19554089f78d156429d988175d79719b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countOfGround: 5
+  countOfGround: 20
   finalGround: {fileID: 326465528}
 --- !u!1 &1122153001
 GameObject:

@@ -26,10 +26,8 @@ public class BaseMenuActions : MonoBehaviour
 
     public void SwitchPanel(RectTransform panelFrom, RectTransform panelTo, Vector2 initPosition, Vector2? targetPosition)
     {
-        Vector2 _targetPosition = targetPosition ?? Vector2.zero;
-
         panelFrom.DOAnchorPos(initPosition, _duration);
-        panelTo.DOAnchorPos(_targetPosition, _duration);
+        panelTo.DOAnchorPos(targetPosition ?? Vector2.zero, _duration);
     }
 
     public void SetResume()
@@ -48,15 +46,30 @@ public class BaseMenuActions : MonoBehaviour
         car.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
-    public void SetSlideMenu() => SwitchPanel(pausePanel, slidePanel, _startPausePosition, new Vector2(-800f, 50f));
+    public void SetSlideMenu() => SwitchPanel(pausePanel,
+                                              slidePanel,
+                                              _startPausePosition,
+                                              new Vector2(-800f, 50f));
 
-    public void SetInfoMenu() => SwitchPanel(slidePanel, infoPanel, _startSlidePosition, null);
+    public void SetInfoMenu() => SwitchPanel(slidePanel,
+                                             infoPanel,
+                                             _startSlidePosition,
+                                             null);
 
-    public void BackToPauseMenuFromSlide() => SwitchPanel(slidePanel, pausePanel, _startSlidePosition, null);
+    public void BackToPauseMenuFromSlide() => SwitchPanel(slidePanel,
+                                                          pausePanel,
+                                                          _startSlidePosition,
+                                                          null);
 
-    public void BackToPauseMenuFromInfo() => SwitchPanel(infoPanel, pausePanel, _startInfoPosition, null);
+    public void BackToPauseMenuFromInfo() => SwitchPanel(infoPanel,
+                                                         pausePanel,
+                                                         _startInfoPosition,
+                                                         null);
 
-    public void BackToSlideMenu() => SwitchPanel(infoPanel, slidePanel, _startSlidePosition, null);
+    public void BackToSlideMenu() => SwitchPanel(infoPanel,
+                                                 slidePanel,
+                                                 _startSlidePosition,
+                                                 null);
 
     public void QuitGame()
     {

@@ -12,21 +12,14 @@ public class DoTweenRectTransformMove : MonoBehaviour
 
     public UnityAction endCallback;
 
-    void OnEnable()
+    private void OnEnable()
     {
         RectTransform rt = transform as RectTransform;
         rt.anchoredPosition = from;
         rt.DOAnchorPos(to, Time).SetDelay(DelayTime).SetEase(easeType).OnComplete(OnComplete);
     }
 
-    public void RegisterEndCallback(UnityAction ua)
-    {
-        endCallback = ua;
-    }
+    public void RegisterEndCallback(UnityAction ua) => endCallback = ua;
 
-    void OnComplete()
-    {
-        if (endCallback != null)
-            endCallback.Invoke();
-    }
+    private void OnComplete() => endCallback?.Invoke();
 }
